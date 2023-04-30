@@ -11,7 +11,7 @@ namespace Bussines.Service.Concrete
     public interface IUserService
     {
         Task<List<User>> GetUser(int id);
-        Task<User> GetUserEmail(string email);
+        Task<User> GetByUser(int id);
         Task<bool> SaveUser(UserDto user);
         Task<JWTToken> Generate(User user);
         Task<User> Authenticate(UserLoginDto userLoginDto);

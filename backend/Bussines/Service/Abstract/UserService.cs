@@ -5,6 +5,7 @@ using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Models.Models;
 using System;
@@ -49,12 +50,11 @@ namespace Bussines.Service.Abstract
         {
             JWTToken jwtToken = new();
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name , user.firstName),
-                new Claim(ClaimTypes.Surname , user.lastName),
-                new Claim(ClaimTypes.Email , user.mail),
-            };
+            var claims = new List<Claim>();
+            claims.Add(new Claim("firstname", user.firstName));
+            claims.Add(new Claim("lastname", user.lastName));
+            claims.Add(new Claim("userId", user.id.ToString()));
+            claims.Add(new Claim("email", user.mail));
 
 
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -77,9 +77,9 @@ namespace Bussines.Service.Abstract
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetUserEmail(string email)
+        public async Task<User> GetByUser(int id)
         {
-            var result =  _genericRepository.GetWhere(x => x.mail == email).FirstOrDefault();
+            var result =  _genericRepository.GetWhere(x => x.id == id).FirstOrDefault();
             return result;
         }
 

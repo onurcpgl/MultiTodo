@@ -31,11 +31,11 @@ namespace WebAPI.Controllers
                 return Ok(true);
             }
         }
-        [HttpPost("/user-profile")]
+        [HttpGet("/user-profile/{id}")]
         [Authorize]
-        public async Task<User> GetUserByMail(string email)
+        public async Task<User> GetUser(int id)
         {
-            var result = await _userService.GetUserEmail(email);
+            var result = await _userService.GetByUser(id);
             return result;
         }
         [HttpPost("/login")]
