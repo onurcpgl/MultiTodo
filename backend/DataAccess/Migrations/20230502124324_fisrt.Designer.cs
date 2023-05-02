@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    [Migration("20230424103413_firsttt")]
-    partial class firsttt
+    [Migration("20230502124324_fisrt")]
+    partial class fisrt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int>("Userid")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("createdDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -45,6 +48,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Userid");
 
                     b.ToTable("Todos");
                 });
@@ -62,7 +67,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("imageUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("lastName")
@@ -80,6 +84,22 @@ namespace DataAccess.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Models.Models.Todo", b =>
+                {
+                    b.HasOne("Models.Models.User", "User")
+                        .WithMany("Todos")
+                        .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Models.Models.User", b =>
+                {
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using Bussines.DTO;
 using Bussines.Service.Concrete;
 using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
+using Microsoft.EntityFrameworkCore;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -48,10 +49,29 @@ namespace Bussines.Service.Abstract
             return result;
         }
 
+        public async Task<List<Todo>> GetUserTodos(int id)
+        {
+            var result =await  _repository.GetWhere(x => x.Userid == id).ToListAsync();
+            return result;
+        }
+
         public async Task<bool> SaveTodo(TodoDto todo)
         {
             var result = _mapper.Map<Todo>(todo);
             var todoResult = await _repository.Add(result);
+            if (!todoResult)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public async Task<bool> SaveTodo(Todo todo)
+        {
+            var todoResult = await _repository.Add(todo);
             if (!todoResult)
             {
                 return false;

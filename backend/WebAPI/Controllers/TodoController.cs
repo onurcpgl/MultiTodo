@@ -3,7 +3,10 @@ using Bussines.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models.Models;
+using System.Security.AccessControl;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -12,9 +15,20 @@ namespace WebAPI.Controllers
     public class TodoController : ControllerBase
     {
         private readonly ITodoService _todoService;
-        public TodoController(ITodoService todoService)
+        private readonly IUserService _userService;
+        public TodoController(ITodoService todoService, IUserService userService)
         {
             _todoService = todoService;
+            _userService = userService;
+        }
+        [HttpGet("/get-user-todos")]
+        [Authorize]
+        public async Task<List<Todo>> userAllTodos()
+        {
+            var currentUser = HttpContext.User;
+            var userId = currentUser.FindFirst("userid")?.Value;
+            var result = await _todoService.GetUserTodos(int.Parse(userId));
+            return result;
         }
         [HttpGet("/all-todo")]
         [Authorize]
@@ -25,9 +39,28 @@ namespace WebAPI.Controllers
 
         }
         [HttpPost("/save-todo")]
+        [Authorize]
         public async Task<IActionResult> addTodo([FromBody] TodoDto todoDto)
         {
-            var result = await _todoService.SaveTodo(todoDto);
+
+            var currentUser = HttpContext.User;
+
+            var userId = currentUser.FindFirst("userid")?.Value;
+
+            var user = await _userService.GetByUser(int.Parse(userId));
+
+
+            var newTodo = new Todo
+            {
+                description = todoDto.description,
+                Userid = user.id,
+                User = user,
+                createdDate = DateTime.UtcNow,
+                title = todoDto.title
+                
+            };
+
+            var result = await _todoService.SaveTodo(newTodo);
             if (!result)
             {
                 return BadRequest();

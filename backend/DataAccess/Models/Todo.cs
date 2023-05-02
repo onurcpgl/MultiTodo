@@ -13,6 +13,8 @@ namespace Models.Models
         public string title { get; set; }
         public string description { get; set; }
         public DateTime createdDate { get; set; }
+        public int Userid { get; set; }
+        public User User { get; set; }
 
     }
 }
