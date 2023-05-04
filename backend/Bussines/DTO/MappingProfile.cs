@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataAccess.Models;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Bussines.DTO
         public MappingProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Team, TeamDto>().ReverseMap();
             CreateMap<Todo, TodoDto>().ReverseMap();
         }
     }

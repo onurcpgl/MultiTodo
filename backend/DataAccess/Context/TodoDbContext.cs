@@ -21,6 +21,9 @@ namespace DataAccess.Context
                 .HasMany(u => u.Todos)
                 .WithOne(t => t.User);
 
+            modelBuilder.Entity<Team>()
+                .HasMany(u => u.memberList)
+                .WithMany(t => t.Teams);
             
         }
         

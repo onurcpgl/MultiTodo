@@ -18,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<ITodoService, TodoService>(); 
+builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

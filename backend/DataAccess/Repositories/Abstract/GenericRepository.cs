@@ -51,7 +51,7 @@ namespace DataAccess.Repositories.Abstract
         {
             EntityEntry<TModel> entityEntry = Table.Update(entity);
             _dbContext.SaveChanges();
-            return entityEntry.State == EntityState.Modified;
+            return true;
         }
 
         public IQueryable<TModel> GetAll(bool tracking = true)

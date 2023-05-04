@@ -5,15 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Models
+namespace Bussines.DTO
 {
-    public class Team
+    public class TeamDto
     {
-        public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public int AdminId { get; set; }
-        public ICollection<User>? memberList { get; set; }
-
     }
 }
