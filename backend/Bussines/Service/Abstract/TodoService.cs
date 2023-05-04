@@ -40,7 +40,9 @@ namespace Bussines.Service.Abstract
         public async Task<List<Todo>> GetAllTodos()
         {
             var result = await _repository.GetAll();
-            return (List<Todo>)result;
+            var todoList = (List<Todo>)result;
+            todoList.Sort((x, y) => y.id.CompareTo(x.id)); 
+            return todoList;
         }
 
         public async Task<Todo> GetByIdTodo(int id)
@@ -52,7 +54,9 @@ namespace Bussines.Service.Abstract
         public async Task<List<Todo>> GetUserTodos(int id)
         {
             var result =await  _repository.GetWhere(x => x.Userid == id).ToListAsync();
-            return result;
+            var todoList = (List<Todo>)result;
+            todoList.Sort((x, y) => y.id.CompareTo(x.id));
+            return todoList;
         }
 
         public async Task<bool> SaveTodo(TodoDto todo)
@@ -72,6 +76,7 @@ namespace Bussines.Service.Abstract
         public async Task<bool> SaveTodo(Todo todo)
         {
             var todoResult = await _repository.Add(todo);
+            
             if (!todoResult)
             {
                 return false;
@@ -80,6 +85,12 @@ namespace Bussines.Service.Abstract
             {
                 return true;
             }
+        }
+
+        public async Task<Todo> SaveTodom(Todo todo)
+        {
+            var todoResult = await _repository.AddModel(todo);
+            return todoResult;
         }
 
         public async Task<bool> UpdatedTodo(Todo todo)

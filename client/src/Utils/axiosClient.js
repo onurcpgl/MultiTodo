@@ -37,20 +37,22 @@ axiosClient.interceptors.response.use(
     }
     console.log("response");
     if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const refreshToken = tokenService.getToken();
-      return axiosClient
-        .post("/auth/token", {
-          refresh_token: refreshToken,
-        })
-        .then((res) => {
-          if (res.status === 201) {
-            tokenService.setToken(res.data);
-            axios.defaults.headers.common["Authorization"] =
-              "Bearer " + tokenService.getToken();
-            return axios(originalRequest);
-          }
-        });
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userLoggedIn");
+      // originalRequest._retry = true;
+      // const refreshToken = tokenService.getToken();
+      // return axiosClient
+      //   .post("/auth/token", {
+      //     refresh_token: refreshToken,
+      //   })
+      //   .then((res) => {
+      //     if (res.status === 201) {
+      //       tokenService.setToken(res.data);
+      //       axios.defaults.headers.common["Authorization"] =
+      //         "Bearer " + tokenService.getToken();
+      //       return axios(originalRequest);
+      //     }
+      //   });
     }
     return Promise.reject(error);
   }

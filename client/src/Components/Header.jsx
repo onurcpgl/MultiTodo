@@ -53,9 +53,9 @@ export default function Header() {
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {navigation.map((item, i) => (
                       <a
-                        key={item.name}
+                        key={i}
                         href={item.href}
                         className={classNames(
                           item.current

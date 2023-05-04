@@ -108,6 +108,11 @@ namespace DataAccess.Repositories.Abstract
             return query;
         }
 
-      
+        public async Task<TModel> AddModel(TModel entity)
+        {
+            EntityEntry<TModel> entityEntry = Table.Update(entity);
+            _dbContext.SaveChanges();
+            return entityEntry.Entity;
+        }
     }
 }

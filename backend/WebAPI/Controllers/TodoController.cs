@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TodoController : ControllerBase
     {
@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
         }
         [HttpPost("/save-todo")]
         [Authorize]
-        public async Task<IActionResult> addTodo([FromBody] TodoDto todoDto)
+        public async Task<int> addTodo([FromBody] TodoDto todoDto)
         {
 
             var currentUser = HttpContext.User;
@@ -60,23 +60,18 @@ namespace WebAPI.Controllers
                 
             };
 
-            var result = await _todoService.SaveTodo(newTodo);
-            if (!result)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok(true);
-            }
+            var result = await _todoService.SaveTodom(newTodo);
+            return result.id;
         }
         [HttpGet("/get-todo")]
+        [Authorize]
         public async Task<Todo> getByTodo(int id)
         {
             var result = await _todoService.GetByIdTodo(id);
             return result;
         }
         [HttpPut("/todo-update")]
+        [Authorize]
         public async Task<bool> todoUpdate([FromBody] Todo todo)
         {
             var result = await _todoService.UpdatedTodo(todo);
@@ -90,7 +85,8 @@ namespace WebAPI.Controllers
             }
                 
         }
-        [HttpDelete("delete-todo")]
+        [HttpDelete("/delete-todo/{id}")]
+        [Authorize]
         public async Task<bool> deleteTodo(int id)
         {
             var result = await _todoService.DeleteTodo(id);

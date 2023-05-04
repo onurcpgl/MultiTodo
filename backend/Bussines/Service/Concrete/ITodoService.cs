@@ -14,6 +14,7 @@ namespace Bussines.Service.Concrete
         Task<Todo> GetByIdTodo(int id);
         Task<bool> SaveTodo(TodoDto todo);
         Task<bool> SaveTodo(Todo todo);
+        Task<Todo> SaveTodom(Todo todo);
         Task<bool> UpdatedTodo(Todo todo);
         Task<bool> DeleteTodo(int id);
         Task<List<Todo>> GetUserTodos(int id);

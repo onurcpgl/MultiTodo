@@ -12,9 +12,10 @@ function Team() {
   }, []);
   return (
     <div>
-      {todo?.map((item, i) => (
+      merhaba
+      {/* {todo?.map((item, i) => (
         <div key={i}>{item.title}</div>
-      ))}
+      ))} */}
     </div>
   );
 }
