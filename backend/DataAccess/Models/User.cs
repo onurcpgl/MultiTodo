@@ -15,8 +15,8 @@ namespace Models.Models
         public string mail { get; set; }
         public string password { get; set; }
         public string? imageUrl { get; set; }
-        public ICollection<Todo> Todos { get; set; }
-        public ICollection<Team> Teams { get; set; }
+        public ICollection<Todo>? Todos { get; set; }
+        public ICollection<Team>? Teams { get; set; }
         
     }
 }

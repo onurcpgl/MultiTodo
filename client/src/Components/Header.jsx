@@ -9,7 +9,7 @@ import { logOut, selectCurrentUser } from "../Redux/Reducers/Auth/AuthReducer";
 const navigation = [
   { name: "Dashboard", href: "/", current: true },
   { name: "Teams", href: "/teams", current: false },
-  { name: "My Team Todo", href: "/team-todo", current: false },
+  { name: "My Team Todo", href: "/my-team-todo", current: false },
 ];
 
 function classNames(...classes) {

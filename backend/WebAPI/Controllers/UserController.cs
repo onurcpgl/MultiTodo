@@ -58,10 +58,24 @@ namespace WebAPI.Controllers
             {
 
                 return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-           
-           
+            }  
         }
+        [HttpPut("/user-update")]
+        [Authorize]
+        public async Task<bool> UpdateUser([FromBody] User user)
+        {
+            var result =await _userService.UserUpdate(user);
+            if(result)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+
+            }
+        }
+       
         
     }
 }

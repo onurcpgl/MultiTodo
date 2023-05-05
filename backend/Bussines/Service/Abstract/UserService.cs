@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace Bussines.Service.Abstract
 {
+
     public class UserService : IUserService
     {
         private readonly IGenericRepository<User> _genericRepository;
@@ -98,6 +99,12 @@ namespace Bussines.Service.Abstract
             }
                 
        
+        }
+
+        public async Task<bool> UserUpdate(User user)
+        {
+            var result =  _genericRepository.Update(user);
+            return result;
         }
     }
 }

@@ -15,5 +15,6 @@ namespace Bussines.Service.Concrete
         Task<bool> SaveUser(UserDto user);
         Task<JWTToken> Generate(User user);
         Task<User> Authenticate(UserLoginDto userLoginDto);
+        Task<bool> UserUpdate(User user);
     }
 }
