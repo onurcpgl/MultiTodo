@@ -1,5 +1,6 @@
 ﻿using Bussines.DTO;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace Bussines.Service.Concrete
 {
     public interface ITeamService
     {
-        Task<bool> CreateTeam(Team team);
-        Task<List<Team>> GetAllTeam();
-        Task<Team> GetByTeam(int teamId);
-        Task<bool> DeleteTeam(Team team);
-        Task<bool> UpdateTeam(Team team);
+        Task<bool> CreateTeam(TeamDto team,IFormFile form);
+        Task<List<TeamDto>> GetAllTeam();
+        Task<TeamDto> GetByTeam(int teamId);
+        Task<bool> DeleteTeam(TeamDto teamDto);
+        Task<bool> UpdateTeam(TeamDto teamDto);
         Task<bool> TeamAddUser(List<int> userId);
     }
 }

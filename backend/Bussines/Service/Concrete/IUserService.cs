@@ -10,11 +10,11 @@ namespace Bussines.Service.Concrete
 {
     public interface IUserService
     {
-        Task<List<User>> GetUser(int id);
-        Task<User> GetByUser(int id);
+        Task<List<UserDto>> GetAllUser();
+        Task<UserDto> GetByUser(int id);
         Task<bool> SaveUser(UserDto user);
         Task<JWTToken> Generate(User user);
         Task<User> Authenticate(UserLoginDto userLoginDto);
-        Task<bool> UserUpdate(User user);
+        Task<bool> UserUpdate(UserDto userDto);
     }
 }

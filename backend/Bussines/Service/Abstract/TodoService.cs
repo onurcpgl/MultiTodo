@@ -37,74 +37,43 @@ namespace Bussines.Service.Abstract
             }
         }
 
-        public async Task<List<Todo>> GetAllTodos()
+        public async Task<List<TodoDto>> GetAllTodos()
         {
             var result = await _repository.GetAll();
-            var todoList = (List<Todo>)result;
-            todoList.Sort((x, y) => y.id.CompareTo(x.id)); 
-            return todoList;
+            var sortedResult = result.ToList();
+            sortedResult.Sort((x, y) => y.id.CompareTo(x.id)); 
+            var mapTodo = _mapper.Map<List<TodoDto>>(result);
+            return mapTodo;
         }
 
-        public async Task<Todo> GetByIdTodo(int id)
+        public async Task<TodoDto> GetByIdTodo(int id)
         {
             var result = await _repository.GetById(id);
-            return result;
+            var mapTodo = _mapper.Map<TodoDto>(result);
+            return mapTodo;
         }
 
-        public async Task<List<Todo>> GetUserTodos(int id)
+        public async Task<List<TodoDto>> GetUserTodos(int id)
         {
             var result =await  _repository.GetWhere(x => x.Userid == id).ToListAsync();
-            var todoList = (List<Todo>)result;
-            todoList.Sort((x, y) => y.id.CompareTo(x.id));
-            return todoList;
+            result.Sort((x, y) => y.id.CompareTo(x.id));
+            var mapTodo = _mapper.Map<List<TodoDto>>(result);   
+            return mapTodo;
         }
 
         public async Task<bool> SaveTodo(TodoDto todo)
         {
             var result = _mapper.Map<Todo>(todo);
             var todoResult = await _repository.Add(result);
-            if (!todoResult)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public async Task<bool> SaveTodo(Todo todo)
-        {
-            var todoResult = await _repository.Add(todo);
-            
-            if (!todoResult)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public async Task<Todo> SaveTodom(Todo todo)
-        {
-            var todoResult = await _repository.AddModel(todo);
             return todoResult;
         }
 
-        public async Task<bool> UpdatedTodo(Todo todo)
+
+        public async Task<bool> UpdatedTodo(TodoDto todoDto)
         {
-            var todoMap = _mapper.Map<Todo>(todo);
-            var findTodo =  _repository.Update(todoMap);
-            if (!findTodo)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            var todoMap = _mapper.Map<Todo>(todoDto);
+            var result =  _repository.Update(todoMap);
+            return result;
            
         }
     }

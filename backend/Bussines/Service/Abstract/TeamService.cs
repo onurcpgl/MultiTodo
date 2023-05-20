@@ -4,6 +4,7 @@ using Bussines.Service.Concrete;
 using DataAccess.Models;
 using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
+using Microsoft.AspNetCore.Http;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -17,34 +18,42 @@ namespace Bussines.Service.Abstract
     public class TeamService : ITeamService
     {
         private readonly IGenericRepository<Team> _repository;
+        private readonly IMediaService _mediaService;
         private readonly IMapper _mapper;
-        public TeamService(IGenericRepository<Team> repository, IMapper mapper)
+        public TeamService(IGenericRepository<Team> repository, IMapper mapper, IMediaService mediaService)
         {
             _repository = repository;
             _mapper = mapper;
+            _mediaService = mediaService;   
+
         }
-        public async Task<bool> CreateTeam(Team team)
+        public async Task<bool> CreateTeam(TeamDto team,IFormFile file)
         {
-            var result = await _repository.Add(team);
+            var mapTeam = _mapper.Map<Team>(team);
+            var result = await _repository.Add(mapTeam);
+            var imageResult = await _mediaService.Storage(file);
             return result;
         }
 
-        public async Task<bool> DeleteTeam(Team team)
+        public async Task<bool> DeleteTeam(TeamDto teamDto)
         {
-            var result =  _repository.Delete(team);
+            var mapTeam = _mapper.Map<Team>(teamDto);
+            var result =  _repository.Delete(mapTeam);
             return result;
         }
 
-        public async Task<List<Team>> GetAllTeam()
+        public async Task<List<TeamDto>> GetAllTeam()
         {
             var result =await _repository.GetAll();
-            return (List<Team>)result;
+            var mapTeam = _mapper.Map<List<TeamDto>>(result);
+            return mapTeam;
         }
 
-        public async Task<Team> GetByTeam(int teamId)
+        public async Task<TeamDto> GetByTeam(int teamId)
         {
             var selectedTeam = await _repository.GetById(teamId);
-            return selectedTeam;
+            var mapDto = _mapper.Map<TeamDto>(selectedTeam);    
+            return mapDto;
         }
 
         public Task<bool> TeamAddUser(List<int> userId)
@@ -53,9 +62,10 @@ namespace Bussines.Service.Abstract
             //Kullanıcı birden fazla kişiye istek atıcak kabul edilenler kayıt edilecek.
         }
 
-        public async Task<bool> UpdateTeam(Team team)
+        public async Task<bool> UpdateTeam(TeamDto teamDto)
         {
-            var result =  _repository.Update(team);
+            var mapTeam = _mapper.Map<Team>(teamDto);
+            var result =  _repository.Update(mapTeam);
             return result;
         }
     }

@@ -11,5 +11,7 @@ namespace Bussines.DTO
     {
         public string title { get; set; }
         public string description { get; set; }
+        public int Userid { get; set; }
+        public UserDto User { get; set; }
     }
 }

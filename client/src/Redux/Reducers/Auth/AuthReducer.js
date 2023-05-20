@@ -13,7 +13,6 @@ const authReducer = createSlice({
     login: (state, action) => {
       state.token = action.payload;
       var decoded = jwt_decode(action.payload);
-      console.log(decoded);
       state.user = true;
       localStorage.setItem("userId", decoded.userId);
       localStorage.setItem("userLoggedIn", true);

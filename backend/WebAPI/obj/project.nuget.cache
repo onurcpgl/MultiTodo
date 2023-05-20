@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "2hMmeKJ2wUkDQxCp4MwmBac+uAea2pvlUzG94ZIdf/Rb1gK1GGTOcveLFSSmRD4Y82KstU6+Oy5z2bey5AEGnQ==",
+  "dgSpecHash": "0i4qVXAMp8or+k4PTWb5wKnG7bsOCXV3j7TpfLI/oOUmxLtI3tiLke8NIp6K1xjN45kAsSFDOAqI1lJQuC6/UA==",
   "success": true,
   "projectFilePath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\MultiTodos\\backend\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\onurs\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.20\\microsoft.aspnetcore.authentication.jwtbearer.3.1.20.nupkg.sha512",
+    "C:\\Users\\onurs\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.5\\microsoft.entityframeworkcore.7.0.5.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.5\\microsoft.entityframeworkcore.abstractions.7.0.5.nupkg.sha512",
@@ -66,6 +67,7 @@
     "C:\\Users\\onurs\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\system.io.filesystem\\4.3.0\\system.io.filesystem.4.3.0.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\onurs\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\system.linq.expressions\\4.3.0\\system.linq.expressions.4.3.0.nupkg.sha512",
     "C:\\Users\\onurs\\.nuget\\packages\\system.objectmodel\\4.3.0\\system.objectmodel.4.3.0.nupkg.sha512",

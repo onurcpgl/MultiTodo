@@ -22,7 +22,7 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DataAccess.Models.Team", b =>
+            modelBuilder.Entity("DataAccess.Models.Media", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -30,8 +30,68 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("AdminId")
+                    b.Property<string>("AbsolutePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("EncodedFilename")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mime")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RealFilename")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RootPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ServePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("teamId")
                         .HasColumnType("integer");
+
+                    b.Property<int?>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("teamId")
+                        .IsUnique();
+
+                    b.HasIndex("userId")
+                        .IsUnique();
+
+                    b.ToTable("Medias");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Team", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -41,7 +101,16 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ownerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("teamImage")
+                        .HasColumnType("text");
+
                     b.HasKey("id");
+
+                    b.HasIndex("ownerId")
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -87,9 +156,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("imageUrl")
-                        .HasColumnType("text");
-
                     b.Property<string>("lastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -122,6 +188,32 @@ namespace DataAccess.Migrations
                     b.ToTable("TeamUser");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Media", b =>
+                {
+                    b.HasOne("DataAccess.Models.Team", "team")
+                        .WithOne("media")
+                        .HasForeignKey("DataAccess.Models.Media", "teamId");
+
+                    b.HasOne("Models.Models.User", "user")
+                        .WithOne("media")
+                        .HasForeignKey("DataAccess.Models.Media", "userId");
+
+                    b.Navigation("team");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Team", b =>
+                {
+                    b.HasOne("Models.Models.User", "owner")
+                        .WithOne("teamOwner")
+                        .HasForeignKey("DataAccess.Models.Team", "ownerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("owner");
+                });
+
             modelBuilder.Entity("Models.Models.Todo", b =>
                 {
                     b.HasOne("Models.Models.User", "User")
@@ -148,9 +240,18 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Team", b =>
+                {
+                    b.Navigation("media");
+                });
+
             modelBuilder.Entity("Models.Models.User", b =>
                 {
                     b.Navigation("Todos");
+
+                    b.Navigation("media");
+
+                    b.Navigation("teamOwner");
                 });
 #pragma warning restore 612, 618
         }

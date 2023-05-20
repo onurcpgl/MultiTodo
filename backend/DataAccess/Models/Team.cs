@@ -1,4 +1,5 @@
-﻿using Models.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,11 @@ namespace DataAccess.Models
         public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public int AdminId { get; set; }
+        public int ownerId { get; set; }
+        public string? teamImage { get; set; }
+        public User owner { get; set; }  
         public ICollection<User>? memberList { get; set; }
+        public Media? media { get; set; }
 
     }
 }

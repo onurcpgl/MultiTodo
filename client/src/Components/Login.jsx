@@ -23,10 +23,10 @@ function Login() {
         values.mail,
         values.password
       );
-      console.log(response);
+      console.log("daata", response);
       if (response?.result.accessToken) {
         dispatch(login(response?.result.accessToken));
-
+        setLoading(false);
         navigate("/");
       }
     },

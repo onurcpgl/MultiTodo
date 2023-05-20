@@ -38,6 +38,7 @@ namespace Bussines.Service.Abstract
         {
             
             var currentUser = await _genericRepository.GetWhereWithInclude(x => x.mail == userLoginDto.mail && x.password == userLoginDto.password, true).FirstOrDefaultAsync();
+            Console.WriteLine(currentUser);
             if (currentUser == null)
             {
                 return null;
@@ -73,37 +74,31 @@ namespace Bussines.Service.Abstract
             return jwtToken;
         }
 
-        public Task<List<User>> GetUser(int id)
+        public async Task<List<UserDto>> GetAllUser()
         {
-            throw new NotImplementedException();
+            var result = await _genericRepository.GetAll();
+            var mapAllUser = _mapper.Map<List<UserDto>>(result);
+            return mapAllUser;
         }
 
-        public async Task<User> GetByUser(int id)
+        public async Task<UserDto> GetByUser(int id)
         {
             var result =  _genericRepository.GetWhere(x => x.id == id).FirstOrDefault();
-            return result;
+            var userDto = _mapper.Map<UserDto>(result);
+            return userDto;
         }
 
-        public async Task<bool> SaveUser(UserDto user)
+        public async Task<bool> SaveUser(UserDto userDto)
         {
-            
-            var result = _mapper.Map<User>(user);
+            var result = _mapper.Map<User>(userDto);
             var userResult = await _genericRepository.Add(result);
-            if(!userResult)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-                
-       
+            return userResult;
         }
 
-        public async Task<bool> UserUpdate(User user)
+        public async Task<bool> UserUpdate(UserDto userDto)
         {
-            var result =  _genericRepository.Update(user);
+            var mapUser = _mapper.Map<User>(userDto);
+            var result =  _genericRepository.Update(mapUser);
             return result;
         }
     }

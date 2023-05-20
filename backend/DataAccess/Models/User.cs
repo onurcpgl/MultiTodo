@@ -14,9 +14,10 @@ namespace Models.Models
         public string lastName { get; set; }
         public string mail { get; set; }
         public string password { get; set; }
-        public string? imageUrl { get; set; }
         public ICollection<Todo>? Todos { get; set; }
         public ICollection<Team>? Teams { get; set; }
+        public Team? teamOwner { get; set; }  
+        public Media? media { get; set; }
         
     }
 }

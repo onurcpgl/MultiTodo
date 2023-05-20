@@ -16,6 +16,7 @@ namespace WebAPI.Controllers
     {
         private readonly ITodoService _todoService;
         private readonly IUserService _userService;
+       
         public TodoController(ITodoService todoService, IUserService userService)
         {
             _todoService = todoService;
@@ -23,7 +24,7 @@ namespace WebAPI.Controllers
         }
         [HttpGet("/get-user-todos")]
         [Authorize]
-        public async Task<List<Todo>> userAllTodos()
+        public async Task<List<TodoDto>> userAllTodos()
         {
             var currentUser = HttpContext.User;
             var userId = currentUser.FindFirst("userid")?.Value;
@@ -32,15 +33,14 @@ namespace WebAPI.Controllers
         }
         [HttpGet("/all-todo")]
         [Authorize]
-        public async Task<List<Todo>> allTodo()
+        public async Task<List<TodoDto>> allTodo()
         {
             var result = await _todoService.GetAllTodos();
             return result;
-
         }
         [HttpPost("/save-todo")]
         [Authorize]
-        public async Task<int> addTodo([FromBody] TodoDto todoDto)
+        public async Task<bool> addTodo([FromBody] TodoDto todoDto)
         {
 
             var currentUser = HttpContext.User;
@@ -49,55 +49,40 @@ namespace WebAPI.Controllers
 
             var user = await _userService.GetByUser(int.Parse(userId));
 
-
-            var newTodo = new Todo
+     
+            var newTodo = new TodoDto
             {
                 description = todoDto.description,
                 Userid = user.id,
                 User = user,
-                createdDate = DateTime.UtcNow,
                 title = todoDto.title
-                
+
             };
 
-            var result = await _todoService.SaveTodom(newTodo);
-            return result.id;
+            var result = await _todoService.SaveTodo(newTodo);
+            return result;
         }
         [HttpGet("/get-todo")]
         [Authorize]
-        public async Task<Todo> getByTodo(int id)
+        public async Task<TodoDto> getByTodo(int id)
         {
             var result = await _todoService.GetByIdTodo(id);
             return result;
         }
         [HttpPut("/todo-update")]
         [Authorize]
-        public async Task<bool> todoUpdate([FromBody] Todo todo)
+        public async Task<bool> todoUpdate([FromBody] TodoDto todo)
         {
             var result = await _todoService.UpdatedTodo(todo);
-            if(!result)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-                
+            return result;
+
         }
         [HttpDelete("/delete-todo/{id}")]
         [Authorize]
         public async Task<bool> deleteTodo(int id)
         {
             var result = await _todoService.DeleteTodo(id);
-            if (result)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return result;
 
         }
     }

@@ -17,31 +17,42 @@ namespace WebAPI.Controllers
     {
         private readonly ITeamService _teamService;
         private readonly IMapper _mapper;
-        public TeamController(ITeamService teamService,IMapper mapper)
+        private readonly IConfiguration _config;
+        private readonly IUserService _userService;
+        public TeamController(ITeamService teamService,IMapper mapper, IConfiguration config, IMediaService mediaService,IUserService userService)
         {
             _teamService = teamService;
+            _userService = userService;
             _mapper = mapper;
+            _config = config;
+
         }
         [HttpPost("/save-team")]
         [Authorize]
-        public async Task<ActionResult<bool>> createdTeam([FromBody] TeamDto teamDto)
+        public async Task<ActionResult<bool>> createdTeam([FromForm] TeamDto teamDto)
         {
+            var file = teamDto.File;
+
             var currentUser = HttpContext.User;
 
             var userId = currentUser.FindFirst("userid")?.Value;
-            var newTeam = new Team
+            var adminUser = await _userService.GetByUser(int.Parse(userId));
+
+            var newTeam = new TeamDto
             {
                 name = teamDto.name,
                 description = teamDto.description,
+                admin = adminUser,
                 AdminId = int.Parse(userId),
             };
-            var result = await _teamService.CreateTeam(newTeam);
+            
+            var result = await _teamService.CreateTeam(newTeam,teamDto.File);
      
             return result;
         }
         [HttpGet("/all-team")]
         [Authorize]
-        public async Task<ActionResult<List<Team>>> getAllTeam()
+        public async Task<ActionResult<List<TeamDto>>> getAllTeam()
         {
             var result = await _teamService.GetAllTeam();
             if (result != null)
@@ -56,18 +67,12 @@ namespace WebAPI.Controllers
         }
         [HttpGet("/getby-team/{id}")]
         [Authorize]
-        public async Task<ActionResult<Team>> getByTeamId(int id)
+        public async Task<ActionResult<TeamDto>> getByTeamId(int id)
         {
             var result = await _teamService.GetByTeam(id);
-            if (result is Team team)
-            {
-                return team;
-            }
-            else
-            {
-                return NotFound();
-            }
+            return result;
         }
+
         [HttpDelete("/delete-team/{id}")]
         [Authorize]
         public async Task<ActionResult> deleteTeam(int id)

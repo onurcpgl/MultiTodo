@@ -19,63 +19,49 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
         [HttpPost("/user")]
-        public async Task<IActionResult> AddUser([FromBody] UserDto userDto)
+        public async Task<bool> AddUser([FromBody] UserDto userDto)
         {
             var result = await _userService.SaveUser(userDto);
-            if (!result)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok(true);
-            }
+            return result;
         }
+
         [HttpGet("/user-profile/{id}")]
-        [Authorize]
-        public async Task<User> GetUser(int id)
+        
+        public async Task<UserDto> GetUser(int id)
         {
             var result = await _userService.GetByUser(id);
             return result;
         }
+
         [HttpPost("/login")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
         {
-            try
-            {
+            
                 var user = await _userService.Authenticate(userLoginDto);
                 if(user == null)
                 {
-                    return BadRequest("Invalid username or password");
+                    return BadRequest("Kullanıcı adı veya şifre yanlış");
                 }
                 else
                 {
                     var token = _userService.Generate(user);
                     return Ok(token);
                 }
-            }
-            catch (Exception e)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }  
+            
         }
         [HttpPut("/user-update")]
         [Authorize]
-        public async Task<bool> UpdateUser([FromBody] User user)
+        public async Task<bool> UpdateUser([FromBody] UserDto userDto)
         {
-            var result =await _userService.UserUpdate(user);
-            if(result)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-
-            }
+            var result =await _userService.UserUpdate(userDto);
+            return result;
         }
-       
-        
+        [HttpGet("/all-user")]
+        public async Task<List<UserDto>> GetAllUser()
+        {
+            var result = await _userService.GetAllUser();
+            return result;
+        }
+
     }
 }
