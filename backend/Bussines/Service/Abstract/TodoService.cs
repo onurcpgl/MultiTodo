@@ -61,9 +61,9 @@ namespace Bussines.Service.Abstract
             return mapTodo;
         }
 
-        public async Task<bool> SaveTodo(TodoDto todo)
+        public async Task<bool> SaveTodo(TodoDto todoDto)
         {
-            var result = _mapper.Map<Todo>(todo);
+            var result = _mapper.Map<Todo>(todoDto);
             var todoResult = await _repository.Add(result);
             return todoResult;
         }

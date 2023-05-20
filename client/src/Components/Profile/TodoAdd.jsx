@@ -21,6 +21,7 @@ function TodoAdd({ addModal, setAddModal, setMyTodo, myTodo }) {
       if (response) {
         setMyTodo([fakeTodo, ...myTodo]);
         formik.resetForm();
+        setAddModal(false);
         setAlertSuccess(true);
       } else {
         formik.resetForm();

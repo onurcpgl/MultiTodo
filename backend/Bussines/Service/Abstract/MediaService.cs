@@ -25,7 +25,7 @@ namespace Bussines.Service.Abstract
             _genRepository = genericRepository;
             _config = config;
         }
-        public async Task<Media> Storage(IFormFile formFile)
+        public async Task<Media> SaveMedia(IFormFile formFile)
         {
           
             try

@@ -31,7 +31,7 @@ namespace Bussines.Service.Abstract
         {
             var mapTeam = _mapper.Map<Team>(team);
             var result = await _repository.Add(mapTeam);
-            var imageResult = await _mediaService.Storage(file);
+            var imageResult = await _mediaService.SaveMedia(file);
             return result;
         }
 

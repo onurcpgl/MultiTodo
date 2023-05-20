@@ -13,10 +13,12 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMediaService _mediaService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMediaService mediaService)
         {
             _userService = userService;
+            _mediaService = mediaService;   
         }
         [HttpPost("/user")]
         public async Task<bool> AddUser([FromBody] UserDto userDto)
@@ -51,8 +53,29 @@ namespace WebAPI.Controllers
         }
         [HttpPut("/user-update")]
         [Authorize]
-        public async Task<bool> UpdateUser([FromBody] UserDto userDto)
+        public async Task<bool> UpdateUser([FromBody] UserDto userDto,IFormFile? formFile)
         {
+            var currentUser = HttpContext.User;
+
+            var userId = currentUser.FindFirst("userid")?.Value;
+
+            var user = await _userService.GetByUser(int.Parse(userId));
+
+            if (formFile != null)
+            {
+                MediaDto media = new MediaDto
+                {
+                    RealFilename = formFile.FileName,
+                    FilePath   = formFile.FileName, 
+                    RootPath = formFile.FileName,   
+                    ServePath = formFile.FileName,
+                    AbsolutePath = formFile.FileName,   
+                    Mime   = formFile.FileName,
+                    userId = user.id,
+                    user = userDto
+                };
+                
+            }
             var result =await _userService.UserUpdate(userDto);
             return result;
         }

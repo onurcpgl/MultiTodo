@@ -10,6 +10,6 @@ namespace Bussines.Service.Concrete
 {
     public interface IMediaService
     {
-        Task<Media> Storage(IFormFile formFile);
+        Task<Media> SaveMedia(IFormFile formFile);
     }
 }

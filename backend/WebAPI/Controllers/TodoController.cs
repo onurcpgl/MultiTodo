@@ -29,6 +29,7 @@ namespace WebAPI.Controllers
             var currentUser = HttpContext.User;
             var userId = currentUser.FindFirst("userid")?.Value;
             var result = await _todoService.GetUserTodos(int.Parse(userId));
+
             return result;
         }
         [HttpGet("/all-todo")]
@@ -53,8 +54,7 @@ namespace WebAPI.Controllers
             var newTodo = new TodoDto
             {
                 description = todoDto.description,
-                Userid = user.id,
-                User = user,
+                Userid = int.Parse(userId),
                 title = todoDto.title
 
             };
