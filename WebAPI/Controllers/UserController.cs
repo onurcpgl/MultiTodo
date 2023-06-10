@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Models.Models;
+using DataAccess.Models;
 
 namespace WebAPI.Controllers
 {
@@ -21,7 +22,7 @@ namespace WebAPI.Controllers
             _mediaService = mediaService;   
         }
         [HttpPost("/user")]
-        public async Task<bool> AddUser([FromBody] UserDto userDto)
+        public async Task<ApiResponse> AddUser([FromBody] UserDto userDto)
         {
             var result = await _userService.SaveUser(userDto);
             return result;

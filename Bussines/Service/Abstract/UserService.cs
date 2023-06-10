@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bussines.DTO;
 using Bussines.Service.Concrete;
+using DataAccess.Models;
 using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace Bussines.Service.Abstract
 
             JwtSecurityToken securityToken = new(
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.AddMinutes(1),
                 signingCredentials: creds
             );
 
@@ -88,11 +89,27 @@ namespace Bussines.Service.Abstract
             return userDto;
         }
 
-        public async Task<bool> SaveUser(UserDto userDto)
+        public async Task<ApiResponse> SaveUser(UserDto userDto)
         {
-            var result = _mapper.Map<User>(userDto);
-            var userResult = await _genericRepository.Add(result);
-            return userResult;
+            //Email adresi ile daha önce kayıt yapılmış mı?
+
+            var checkEmail = _genericRepository.GetWhere(x => x.mail == userDto.mail).FirstOrDefault();
+            if(checkEmail != null)
+            {
+                return new ApiResponse { Response = 409, Message = "Mail adresi ile daha önce kayıt yapılmış." };
+            }
+            else
+            {
+                var result = _mapper.Map<User>(userDto);
+                var userResult = await _genericRepository.Add(result);
+                if(!userResult)
+                {
+                    return new ApiResponse { Response = 400, Message = "Kayıt işlemi yapılırken bir hata meydana geldi, lütfen daha sonra tekrar deneyiniz." };
+                }
+                return new ApiResponse { Response = 200, Message = "Kayıt işlemi başarılı." };
+            }
+            
+            
         }
 
         public async Task<bool> UserUpdate(UserDto userDto)

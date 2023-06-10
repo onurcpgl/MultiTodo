@@ -22,14 +22,38 @@ namespace WebAPI.Controllers
             _todoService = todoService;
             _userService = userService;
         }
+        public bool IsTokenExpired(Claim expirationClaim)
+        {
+            if (expirationClaim != null && !string.IsNullOrEmpty(expirationClaim.Value))
+            {
+                var expirationUnixTimestamp = long.Parse(expirationClaim.Value);
+                var expirationDateTime = DateTimeOffset.FromUnixTimeSeconds(expirationUnixTimestamp).UtcDateTime;
+                if (expirationDateTime < DateTime.UtcNow)
+                {
+                    // Token süresi geçmiş
+                    return true;
+                }
+            }
+
+            return false;
+        }
         [HttpGet("/get-user-todos")]
         [Authorize]
-        public async Task<List<TodoDto>> userAllTodos()
+        public async Task<List<TodoDto>> UserAllTodos()
         {
             var currentUser = HttpContext.User;
             var userId = currentUser.FindFirst("userid")?.Value;
-            var result = await _todoService.GetUserTodos(int.Parse(userId));
+            var expirationClaim = currentUser.FindFirst("exp");
+            // Tokenın süresini kontrol etme
+            if (IsTokenExpired(expirationClaim))
+            {
+                // Token süresi geçmiş, hata yanıtı dönme
+                Response.StatusCode = 401; // Unauthorized
+                return null;
+            }
 
+
+            var result = await _todoService.GetUserTodos(int.Parse(userId));
             return result;
         }
         [HttpGet("/all-todo")]

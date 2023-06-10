@@ -1,4 +1,5 @@
 ﻿using Bussines.DTO;
+using DataAccess.Models;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Bussines.Service.Concrete
     {
         Task<List<UserDto>> GetAllUser();
         Task<UserDto> GetByUser(int id);
-        Task<bool> SaveUser(UserDto user);
+        Task<ApiResponse> SaveUser(UserDto user);
         Task<JWTToken> Generate(User user);
         Task<User> Authenticate(UserLoginDto userLoginDto);
         Task<bool> UserUpdate(UserDto userDto);
