@@ -28,11 +28,13 @@ namespace WebAPI.Controllers
             return result;
         }
 
-        [HttpGet("/user-profile/{id}")]
-        
-        public async Task<UserDto> GetUser(int id)
+        [HttpGet("/user-profile")]
+        [Authorize]
+        public async Task<UserDto> GetUser()
         {
-            var result = await _userService.GetByUser(id);
+            var currentUser = HttpContext.User;
+            var userId = currentUser.FindFirst("userid")?.Value;
+            var result = await _userService.GetByUser(int.Parse(userId));
             return result;
         }
 
