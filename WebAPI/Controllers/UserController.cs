@@ -50,6 +50,7 @@ namespace WebAPI.Controllers
                 else
                 {
                     var token = _userService.Generate(user);
+                    _userService.UpdateRefreshToken(token.Result.RefreshToken,user ,token.Result.Expiration);
                     return Ok(token);
                 }
             

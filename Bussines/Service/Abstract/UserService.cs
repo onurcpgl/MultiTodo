@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,7 +73,16 @@ namespace Bussines.Service.Abstract
 
             JwtSecurityTokenHandler tokenHandler = new();
             jwtToken.AccessToken = tokenHandler.WriteToken(securityToken);
+            jwtToken.RefreshToken = CreateRefreshToken();
+            jwtToken.Expiration = DateTime.UtcNow.AddMinutes(1);
             return jwtToken;
+        }
+        public string CreateRefreshToken()
+        {
+            byte[] data = new byte[32];
+            using RandomNumberGenerator random = RandomNumberGenerator.Create();
+            random.GetBytes(data);
+            return Convert.ToBase64String(data);
         }
 
         public async Task<List<UserDto>> GetAllUser()
@@ -117,6 +127,19 @@ namespace Bussines.Service.Abstract
             var mapUser = _mapper.Map<User>(userDto);
             var result =  _genericRepository.Update(mapUser);
             return result;
+        }
+
+        public async Task<bool> UpdateRefreshToken(string refreshToken,User user, DateTime accesTokenTime)
+        {
+            if(user != null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = accesTokenTime.AddMinutes(1);
+                _genericRepository.Update(user);
+                return true;
+            }else
+            return false;
+
         }
     }
 }
