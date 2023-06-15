@@ -14,11 +14,11 @@ namespace Bussines.Service.Concrete
         Task<List<UserDto>> GetAllUser();
         Task<UserDto> GetByUser(int id);
         Task<ApiResponse> SaveUser(UserDto user);
-        Task<JWTToken> Generate(User user);
-        string CreateRefreshToken();
-
-        Task<User> Authenticate(UserLoginDto userLoginDto);
+     
+        
+ 
         Task<bool> UserUpdate(UserDto userDto);
-        Task<bool> UpdateRefreshToken(string refreshToken,User user, DateTime accesTokenTime);
+       
+        Task<User> FindUserWithRefreshToken(string refreshToken);
     }
 }

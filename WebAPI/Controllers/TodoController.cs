@@ -16,47 +16,30 @@ namespace WebAPI.Controllers
     {
         private readonly ITodoService _todoService;
         private readonly IUserService _userService;
+        private readonly IAuthService _tokenService;
        
-        public TodoController(ITodoService todoService, IUserService userService)
+        public TodoController(ITodoService todoService, IUserService userService, IAuthService tokenService)
         {
             _todoService = todoService;
             _userService = userService;
+            _tokenService = tokenService;
         }
-        [HttpGet("/get-user-todossss")]
-        public bool IsTokenExpired(Claim expirationClaim)
-        {
-            if (expirationClaim != null && !string.IsNullOrEmpty(expirationClaim.Value))
-            {
-                var expirationUnixTimestamp = long.Parse(expirationClaim.Value);
-                var expirationDateTime = DateTimeOffset.FromUnixTimeSeconds(expirationUnixTimestamp).UtcDateTime;
-                if (expirationDateTime < DateTime.UtcNow)
-                {
-                    // Token süresi geçmiş
-                    return true;
-                }
-            }
-
-            return false;
-        }
+      
         [HttpGet("/get-user-todos")]
         [Authorize]
         public async Task<List<TodoDto>> UserAllTodos()
         {
-            var currentUser = HttpContext.User;
-            var userId = currentUser.FindFirst("userid")?.Value;
-            var expirationClaim = currentUser.FindFirst("exp");
             // Tokenın süresini kontrol etme
-            if (IsTokenExpired(expirationClaim))
+            if (_tokenService.IsTokenExpired(HttpContext.User))
             {
                 // Token süresi geçmiş, hata yanıtı dönme
                 Response.StatusCode = 401; // Unauthorized
                 return null;
             }
-
-
-            var result = await _todoService.GetUserTodos(int.Parse(userId));
+            var result = await _todoService.GetUserTodos(HttpContext.User);
             return result;
         }
+
         [HttpGet("/all-todo")]
         [Authorize]
         public async Task<List<TodoDto>> allTodo()

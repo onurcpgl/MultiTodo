@@ -14,12 +14,14 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
         private readonly IMediaService _mediaService;
 
-        public UserController(IUserService userService, IMediaService mediaService)
+        public UserController(IUserService userService, IMediaService mediaService, IAuthService authService)
         {
             _userService = userService;
             _mediaService = mediaService;   
+            _authService = authService;
         }
         [HttpPost("/user")]
         public async Task<ApiResponse> AddUser([FromBody] UserDto userDto)
@@ -42,15 +44,15 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
         {
             
-                var user = await _userService.Authenticate(userLoginDto);
+                var user = await _authService.Authenticate(userLoginDto);
                 if(user == null)
                 {
                     return BadRequest("Kullanıcı adı veya şifre yanlış");
                 }
                 else
                 {
-                    var token = _userService.Generate(user);
-                    _userService.UpdateRefreshToken(token.Result.RefreshToken,user ,token.Result.Expiration);
+                    var token = _authService.Generate(user);
+                    _authService.UpdateRefreshToken(token.Result.RefreshToken,user ,token.Result.Expiration);
                     return Ok(token);
                 }
             

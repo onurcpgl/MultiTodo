@@ -8,6 +8,7 @@ using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,9 +54,10 @@ namespace Bussines.Service.Abstract
             return mapTodo;
         }
 
-        public async Task<List<TodoDto>> GetUserTodos(int id)
+        public async Task<List<TodoDto>> GetUserTodos(ClaimsPrincipal claimsPrincipal)
         {
-            var result =await  _repository.GetWhere(x => x.Userid == id).ToListAsync();
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
+            var result =await  _repository.GetWhere(x => x.Userid == int.Parse(userId)).ToListAsync();
             result.Sort((x, y) => y.id.CompareTo(x.id));
             var mapTodo = _mapper.Map<List<TodoDto>>(result);   
             return mapTodo;
