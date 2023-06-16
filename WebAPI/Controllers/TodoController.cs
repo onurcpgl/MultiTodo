@@ -47,29 +47,16 @@ namespace WebAPI.Controllers
             var result = await _todoService.GetAllTodos();
             return result;
         }
+
         [HttpPost("/save-todo")]
         [Authorize]
         public async Task<bool> addTodo([FromBody] TodoDto todoDto)
         {
 
-            var currentUser = HttpContext.User;
-
-            var userId = currentUser.FindFirst("userid")?.Value;
-
-            var user = await _userService.GetByUser(int.Parse(userId));
-
-     
-            var newTodo = new TodoDto
-            {
-                description = todoDto.description,
-                Userid = int.Parse(userId),
-                title = todoDto.title
-
-            };
-
-            var result = await _todoService.SaveTodo(newTodo);
+            var result = await _todoService.SaveTodo(todoDto, HttpContext.User);
             return result;
         }
+       
         [HttpGet("/get-todo")]
         [Authorize]
         public async Task<TodoDto> getByTodo(int id)
@@ -77,6 +64,7 @@ namespace WebAPI.Controllers
             var result = await _todoService.GetByIdTodo(id);
             return result;
         }
+
         [HttpPut("/todo-update")]
         [Authorize]
         public async Task<bool> todoUpdate([FromBody] TodoDto todo)
@@ -85,6 +73,7 @@ namespace WebAPI.Controllers
             return result;
 
         }
+
         [HttpDelete("/delete-todo/{id}")]
         [Authorize]
         public async Task<bool> deleteTodo(int id)

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using DataAccess.Repositories.Abstract;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
+using Bussines.DTO;
+using AutoMapper;
 
 namespace Bussines.Service.Abstract
 {
@@ -19,15 +21,16 @@ namespace Bussines.Service.Abstract
         Random random = new Random();
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private readonly IGenericRepository<Media> _genRepository;
+        private readonly IMapper _mapper;
         private readonly IConfiguration _config;
-        public MediaService(IGenericRepository<Media> genericRepository, IConfiguration config)
+        public MediaService(IGenericRepository<Media> genericRepository, IConfiguration config,IMapper mapper)
         {
             _genRepository = genericRepository;
+            _mapper = mapper;
             _config = config;
         }
         public async Task<Media> SaveMedia(IFormFile formFile)
         {
-          
             try
             {
                 var todayDate = DateTime.Now.ToString("yyyyMMdd");
@@ -56,6 +59,13 @@ namespace Bussines.Service.Abstract
                 throw error;
             }
            
+        }
+
+        public async Task<bool> SaveUserMedia(MediaDto media)
+        {
+            var mapMedia = _mapper.Map<Media>(media);    
+            var result = await _genRepository.Add(mapMedia);
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using Bussines.DTO;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Bussines.Service.Concrete
     public interface IMediaService
     {
         Task<Media> SaveMedia(IFormFile formFile);
+        Task<bool> SaveUserMedia(MediaDto media);
     }
 }

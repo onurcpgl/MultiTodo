@@ -8,6 +8,7 @@ using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,8 +64,18 @@ namespace Bussines.Service.Abstract
             return mapTodo;
         }
 
-        public async Task<bool> SaveTodo(TodoDto todoDto)
+        public async Task<bool> SaveTodo(TodoDto todoDto, ClaimsPrincipal claimsPrincipal)
         {
+            
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
+
+            var newTodo = new TodoDto
+            {
+                description = todoDto.description,
+                Userid = int.Parse(userId),
+                title = todoDto.title
+
+            };
             var result = _mapper.Map<Todo>(todoDto);
             var todoResult = await _repository.Add(result);
             return todoResult;

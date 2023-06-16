@@ -14,14 +14,12 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
         private readonly IMediaService _mediaService;
 
         public UserController(IUserService userService, IMediaService mediaService, IAuthService authService)
         {
             _userService = userService;
             _mediaService = mediaService;   
-            _authService = authService;
         }
         [HttpPost("/user")]
         public async Task<ApiResponse> AddUser([FromBody] UserDto userDto)
@@ -34,55 +32,15 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<UserDto> GetUser()
         {
-            var currentUser = HttpContext.User;
-            var userId = currentUser.FindFirst("userid")?.Value;
-            var result = await _userService.GetByUser(int.Parse(userId));
-            return result;
+            var user =  _userService.FindLoginUser(HttpContext.User);
+            return user;
         }
 
-        [HttpPost("/login")]
-        public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
-        {
-            
-                var user = await _authService.Authenticate(userLoginDto);
-                if(user == null)
-                {
-                    return BadRequest("Kullanıcı adı veya şifre yanlış");
-                }
-                else
-                {
-                    var token = _authService.Generate(user);
-                    _authService.UpdateRefreshToken(token.Result.RefreshToken,user ,token.Result.Expiration);
-                    return Ok(token);
-                }
-            
-        }
         [HttpPut("/user-update")]
         [Authorize]
-        public async Task<bool> UpdateUser([FromBody] UserDto userDto,IFormFile? formFile)
+        public async Task<bool> UpdateUser([FromForm] UserDto userDto)
         {
-            var currentUser = HttpContext.User;
-
-            var userId = currentUser.FindFirst("userid")?.Value;
-
-            var user = await _userService.GetByUser(int.Parse(userId));
-
-            if (formFile != null)
-            {
-                MediaDto media = new MediaDto
-                {
-                    RealFilename = formFile.FileName,
-                    FilePath   = formFile.FileName, 
-                    RootPath = formFile.FileName,   
-                    ServePath = formFile.FileName,
-                    AbsolutePath = formFile.FileName,   
-                    Mime   = formFile.FileName,
-                    userId = user.id,
-                    user = userDto
-                };
-                
-            }
-            var result =await _userService.UserUpdate(userDto);
+            var result =await _userService.UserUpdate(userDto, userDto.formFile , HttpContext.User);
             return result;
         }
         [HttpGet("/all-user")]

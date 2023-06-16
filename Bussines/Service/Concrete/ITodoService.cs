@@ -13,7 +13,7 @@ namespace Bussines.Service.Concrete
     {
         Task<List<TodoDto>> GetAllTodos();
         Task<TodoDto> GetByIdTodo(int id);
-        Task<bool> SaveTodo(TodoDto todoDto);
+        Task<bool> SaveTodo(TodoDto todoDto, ClaimsPrincipal claimsPrincipal);
         Task<bool> UpdatedTodo(TodoDto todoDto);
         Task<bool> DeleteTodo(int id);
         Task<List<TodoDto>> GetUserTodos(ClaimsPrincipal claimsPrincipal);

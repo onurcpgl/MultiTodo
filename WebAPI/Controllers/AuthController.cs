@@ -22,5 +22,22 @@ namespace WebAPI.Controllers
             var result = await _authService.RefreshTokenLogin(refreshToken);
             return result;
         }
+        [HttpPost("/login")]
+        public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
+        {
+
+            var user = await _authService.Authenticate(userLoginDto);
+            if (user == null)
+            {
+                return BadRequest("Kullanıcı adı veya şifre yanlış");
+            }
+            else
+            {
+                var token = _authService.Generate(user);
+                _authService.UpdateRefreshToken(token.Result.RefreshToken, user, token.Result.Expiration);
+                return Ok(token);
+            }
+
+        }
     }
 }
