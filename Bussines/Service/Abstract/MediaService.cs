@@ -36,22 +36,22 @@ namespace Bussines.Service.Abstract
                 var todayDate = DateTime.Now.ToString("yyyyMMdd");
                 var todayTime = DateTime.Now.ToString("HHmmss");
                 var rootPath = _config["MediaStorage:FileRootPath"];
-                var filePath = $"capella/{todayDate}/{todayTime}";
+
+                var filePath = $"myapp/{todayDate}/{todayTime}";
                 var fullPath = $"{rootPath}/{filePath}";
                 var filenamehash = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
-                Media media = new Media();
-                media.RealFilename = formFile.FileName;
-                media.EncodedFilename = filenamehash;
-                media.Extension = Path.GetExtension(formFile.FileName);
-                media.FilePath = filePath;
-                media.RootPath = rootPath;
-                media.Size = formFile.Length;
-                media.Mime = formFile.ContentType;
-                var absolutePath = $"{filePath}/{filenamehash}{Path.GetExtension(formFile.FileName)}";
-                media.AbsolutePath = absolutePath;
-                media.ServePath = absolutePath;
-                await _genRepository.Add(media);
-                return media;
+                Media media = new Media
+                {
+                    RealFilename = formFile.FileName,
+                    EncodedFilename = filenamehash,
+                    FilePath = filePath,
+                    RootPath = rootPath,
+                    AbsolutePath = $"{filePath}/{filenamehash}{Path.GetExtension(formFile.FileName)}",
+                    Size = formFile.Length,
+                    Deleted = false,
+                };
+                var resultMedia = await _genRepository.AddModel(media);
+                return resultMedia;
             }
             catch (Exception error)
             {
@@ -61,11 +61,106 @@ namespace Bussines.Service.Abstract
            
         }
 
-        public async Task<bool> SaveUserMedia(MediaDto media)
+        public async Task<Media> SaveUserMedia(IFormFile formFile, int id)
         {
-            var mapMedia = _mapper.Map<Media>(media);    
-            var result = await _genRepository.Add(mapMedia);
-            return result;
+            try
+            {
+                var todayDate = DateTime.Now.ToString("yyyyMMdd");
+                var todayTime = DateTime.Now.ToString("HHmmss");
+                var rootPath = _config["MediaStorage:FileRootPath"];
+
+                var filePath = $"myapp/{todayDate}/{todayTime}";
+                var fullPath = $"{rootPath}/{filePath}";
+                var filenamehash = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+                Media media = new Media
+                {
+                    RealFilename = formFile.FileName,
+                    EncodedFilename = filenamehash,
+                    FilePath = filePath,
+                    RootPath = rootPath,
+                    AbsolutePath = $"{filePath}/{filenamehash}{Path.GetExtension(formFile.FileName)}",
+                    Size = formFile.Length,
+                    Deleted = false,
+                };
+                var haveMedia = _genRepository.GetWhere(x => x.userId == id).FirstOrDefault();
+                if (haveMedia != null)
+                {
+                    haveMedia.RealFilename = media.RealFilename;
+                    haveMedia.EncodedFilename = media.EncodedFilename;
+                    haveMedia.FilePath = media.FilePath;
+                    haveMedia.RootPath = media.RootPath;
+                    haveMedia.AbsolutePath = media.AbsolutePath;
+                    haveMedia.Size = media.Size;
+                    haveMedia.Deleted = media.Deleted;
+
+                    var resultMedia = await _genRepository.UpdateModel(haveMedia);
+                    return resultMedia;
+                }
+                else
+                {
+                    var resultMedia = await _genRepository.AddModel(media);
+                    return resultMedia;
+                }
+
+
+
+            }
+            catch (Exception error)
+            {
+
+                throw error;
+            }
+        }
+
+        public async Task<Media> SaveTeamMedia(IFormFile formFile, int id)
+        {
+            try
+            {
+                var todayDate = DateTime.Now.ToString("yyyyMMdd");
+                var todayTime = DateTime.Now.ToString("HHmmss");
+                var rootPath = _config["MediaStorage:FileRootPath"];
+
+                var filePath = $"myapp/{todayDate}/{todayTime}";
+                var fullPath = $"{rootPath}/{filePath}";
+                var filenamehash = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+                Media media = new Media
+                {
+                    RealFilename = formFile.FileName,
+                    EncodedFilename = filenamehash,
+                    FilePath = filePath,
+                    RootPath = rootPath,
+                    AbsolutePath = $"{filePath}/{filenamehash}{Path.GetExtension(formFile.FileName)}",
+                    Size = formFile.Length,
+                    Deleted = false,
+                };
+                var haveMedia = _genRepository.GetWhere(x => x.teamId == id).FirstOrDefault();
+                if (haveMedia != null)
+                {
+                    haveMedia.RealFilename = media.RealFilename;
+                    haveMedia.EncodedFilename = media.EncodedFilename;
+                    haveMedia.FilePath = media.FilePath;
+                    haveMedia.RootPath = media.RootPath;
+                    haveMedia.AbsolutePath = media.AbsolutePath;
+                    haveMedia.Size = media.Size;
+                    haveMedia.Deleted = media.Deleted;
+
+                    var resultMedia = await _genRepository.UpdateModel(haveMedia);
+                    return resultMedia;
+                }
+                else
+                {
+                    var resultMedia = await _genRepository.AddModel(media);
+                    return resultMedia;
+                }
+
+
+
+            }
+            catch (Exception error)
+            {
+
+                throw error;
+            }
         }
     }
 }

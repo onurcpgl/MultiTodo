@@ -19,7 +19,7 @@ namespace Bussines.Service.Concrete
         UserDto FindLoginUser(ClaimsPrincipal claimsPrincipal);
         
  
-        Task<bool> UserUpdate(UserDto userDto,IFormFile formFile, ClaimsPrincipal claimsPrincipal);
+        Task<bool> UserUpdate(UserDto userDto,ClaimsPrincipal claimsPrincipal);
        
         Task<User> FindUserWithRefreshToken(string refreshToken);
     }

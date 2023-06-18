@@ -12,6 +12,7 @@ namespace Bussines.Service.Concrete
     public interface IMediaService
     {
         Task<Media> SaveMedia(IFormFile formFile);
-        Task<bool> SaveUserMedia(MediaDto media);
+        Task<Media> SaveUserMedia(IFormFile formFile, int id);
+        Task<Media> SaveTeamMedia(IFormFile formFile, int id);
     }
 }

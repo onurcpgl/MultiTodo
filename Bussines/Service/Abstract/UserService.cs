@@ -77,29 +77,27 @@ namespace Bussines.Service.Abstract
             
         }
 
-        public async Task<bool> UserUpdate(UserDto userDto,IFormFile formFile,ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> UserUpdate(UserDto userDto,ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal.FindFirst("userid")?.Value;
-                
-            if (formFile != null)
+          
+            if(userDto.formFile != null)
             {
-                MediaDto media = new MediaDto
-                {
-                    RealFilename = formFile.FileName,
-                    FilePath = formFile.FileName,
-                    RootPath = formFile.FileName,
-                    ServePath = formFile.FileName,
-                    AbsolutePath = formFile.FileName,
-                    Mime = formFile.FileName,
-                    userId = int.Parse(userId),
-                    user = userDto
-                };
-                await _mediaService.SaveUserMedia(media);
+                var userId = claimsPrincipal.FindFirst("userid")?.Value;
+                var userMedia = await _mediaService.SaveUserMedia(userDto.formFile,int.Parse(userId));
+                var mapUser = _mapper.Map<User>(userDto);
+                mapUser.media = userMedia;
+                var result = _genericRepository.Update(mapUser);
+                return result;
             }
+            else
+            {
+                var mapUser = _mapper.Map<User>(userDto);
+                var result = _genericRepository.Update(mapUser);
+                return result;
+            }
+           
+           
             
-            var mapUser = _mapper.Map<User>(userDto);
-            var result =  _genericRepository.Update(mapUser);
-            return result;
         }
 
       

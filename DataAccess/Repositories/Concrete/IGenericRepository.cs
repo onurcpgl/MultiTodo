@@ -15,6 +15,7 @@ namespace DataAccess.Repositories.Concrete
         Task<TModel> AddModel(TModel entity);
         bool Delete(TModel entity);
         bool Update(TModel entity);
+        Task<TModel> UpdateModel(TModel entity);
         IQueryable<TModel> GetAll(bool tracking = true);
 
         IQueryable<TModel> GetWhere(Expression<Func<TModel, bool>> method, bool tracking = true);

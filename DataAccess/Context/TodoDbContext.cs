@@ -27,13 +27,13 @@ namespace DataAccess.Context
                 .WithMany(t => t.Teams);
 
             modelBuilder.Entity<Media>()
-                .HasOne(m => m.user)
-                .WithOne(u => u.media)
-                .HasForeignKey<Media>(mu => mu.userId);
+                .HasOne(media => media.user)
+                .WithOne(user => user.media)
+                .HasForeignKey<Media>(mediaUser => mediaUser.userId);
 
             modelBuilder.Entity<Media>()
-                .HasOne(m => m.team)
-                .WithOne(t => t.media)
+                .HasOne(media => media.team)
+                .WithOne(team => team.media)
                 .HasForeignKey<Media>(mt => mt.teamId);
 
             modelBuilder.Entity<Team>()

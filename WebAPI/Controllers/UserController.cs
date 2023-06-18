@@ -40,7 +40,9 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<bool> UpdateUser([FromForm] UserDto userDto)
         {
-            var result =await _userService.UserUpdate(userDto, userDto.formFile , HttpContext.User);
+           
+           
+            var result =await _userService.UserUpdate(userDto, HttpContext.User);
             return result;
         }
         [HttpGet("/all-user")]

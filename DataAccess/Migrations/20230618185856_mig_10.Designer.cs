@@ -3,6 +3,7 @@ using System;
 using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    partial class TodoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230618185856_mig_10")]
+    partial class mig_10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,33 +34,41 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
                     b.Property<string>("AbsolutePath")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("Deleted")
+                    b.Property<bool>("Deleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("EncodedFilename")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Extension")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FilePath")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Mime")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RealFilename")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RootPath")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ServePath")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("Size")
+                    b.Property<long>("Size")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("teamId")

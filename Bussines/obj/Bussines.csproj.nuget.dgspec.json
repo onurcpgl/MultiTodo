@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj": {}
+    "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj": {}
   },
   "projects": {
-    "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj": {
+    "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj",
+        "projectUniqueName": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj",
         "projectName": "Bussines",
-        "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj",
-        "packagesPath": "C:\\Users\\onurs\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\obj\\",
+        "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj",
+        "packagesPath": "C:\\Users\\onurc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\onurs\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\onurc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj": {
-                "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj"
+              "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj": {
+                "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj"
               }
             }
           }
@@ -77,21 +77,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj": {
+    "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
-        "packagesPath": "C:\\Users\\onurs\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\obj\\",
+        "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
+        "packagesPath": "C:\\Users\\onurc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\onurs\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\onurc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -156,7 +156,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
