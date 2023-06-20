@@ -8,7 +8,7 @@ namespace DataAccess.Models
 {
     public class ApiResponse
     {
-        public int Response { get; set; }
+        public object Response {get; set; }
         public string Message { get; set; } 
     }
 }

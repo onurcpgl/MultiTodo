@@ -15,11 +15,13 @@ namespace WebAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMediaService _mediaService;
+        private readonly IAuthService _authService;
 
         public UserController(IUserService userService, IMediaService mediaService, IAuthService authService)
         {
             _userService = userService;
-            _mediaService = mediaService;   
+            _mediaService = mediaService;
+            _authService = authService;
         }
         [HttpPost("/user")]
         public async Task<ApiResponse> AddUser([FromBody] UserDto userDto)
@@ -32,6 +34,12 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<UserDto> GetUser()
         {
+            if (_authService.IsTokenExpired(HttpContext.User))
+            {
+                // Token süresi geçmiş, hata yanıtı dönme
+                Response.StatusCode = 401; // Unauthorized
+                return null;
+            }
             var user =  _userService.FindLoginUser(HttpContext.User);
             return user;
         }

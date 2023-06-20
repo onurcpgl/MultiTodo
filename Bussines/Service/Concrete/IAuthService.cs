@@ -1,4 +1,5 @@
 ﻿using Bussines.DTO;
+using DataAccess.Models;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Bussines.Service.Concrete
     public interface IAuthService
     {
         bool IsTokenExpired(ClaimsPrincipal claimsPrincipal);
-        Task<JWTToken> RefreshTokenLogin(string refreshToken);
+        Task<ApiResponse> RefreshTokenLogin(string refreshToken);
         Task<JWTToken> Generate(User user);
         Task<User> Authenticate(UserLoginDto userLoginDto);
         string CreateRefreshToken();

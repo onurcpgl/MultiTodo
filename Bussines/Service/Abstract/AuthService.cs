@@ -1,5 +1,6 @@
 ﻿using Bussines.DTO;
 using Bussines.Service.Concrete;
+using DataAccess.Models;
 using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
 using Microsoft.EntityFrameworkCore;
@@ -56,14 +57,14 @@ namespace Bussines.Service.Abstract
 
             JwtSecurityToken securityToken = new(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(1),
+                expires: DateTime.UtcNow.AddSeconds(10),
                 signingCredentials: creds
             );
 
             JwtSecurityTokenHandler tokenHandler = new();
             jwtToken.AccessToken = tokenHandler.WriteToken(securityToken);
             jwtToken.RefreshToken = CreateRefreshToken();
-            jwtToken.Expiration = DateTime.UtcNow.AddMinutes(1);
+            jwtToken.Expiration = DateTime.UtcNow.AddSeconds(10);
             return jwtToken;
         }
 
@@ -85,17 +86,17 @@ namespace Bussines.Service.Abstract
             return false;
         }
 
-        public async Task<JWTToken> RefreshTokenLogin(string refreshToken)
+        public async Task<ApiResponse> RefreshTokenLogin(string refreshToken)
         {
-            var user = _userService.FindUserWithRefreshToken(refreshToken);
-            if (user != null && user.Result.RefreshTokenEndDate > DateTime.UtcNow)
+            var user = await _userService.FindUserWithRefreshToken(refreshToken);
+            if (user != null && user.RefreshTokenEndDate > DateTime.UtcNow)
             {
-                var token = await Generate(user.Result);
-                await UpdateRefreshToken(token.RefreshToken, user.Result, token.Expiration);
-                return token;
+                var token = await Generate(user);
+                await UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
+                return new ApiResponse { Message = "200", Response = token };
             }
             else
-                throw new InvalidOperationException("Kullanıcı bulunamadı.");
+                return new ApiResponse { Message = "400", Response = "User not valid" };
 
         }
         public async Task<User> Authenticate(UserLoginDto userLoginDto)
@@ -117,7 +118,7 @@ namespace Bussines.Service.Abstract
             if (user != null)
             {
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenEndDate = accesTokenTime.AddMinutes(1);
+                user.RefreshTokenEndDate = accesTokenTime.AddSeconds(15);
                 _genericRepository.Update(user);
                 return true;
             }

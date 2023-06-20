@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("/refresh-token")]
-        public async Task<JWTToken> RefreshTokenLogin([FromBody] string refreshToken)
+        public async Task<object> RefreshTokenLogin([FromBody] string refreshToken)
         {   
             var result = await _authService.RefreshTokenLogin(refreshToken);
             return result;
