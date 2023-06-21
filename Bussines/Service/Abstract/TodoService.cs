@@ -76,7 +76,7 @@ namespace Bussines.Service.Abstract
                 title = todoDto.title
 
             };
-            var result = _mapper.Map<Todo>(todoDto);
+            var result = _mapper.Map<Todo>(newTodo);
             var todoResult = await _repository.Add(result);
             return todoResult;
         }

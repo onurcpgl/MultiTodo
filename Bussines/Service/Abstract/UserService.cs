@@ -114,5 +114,11 @@ namespace Bussines.Service.Abstract
             var userDto = _mapper.Map<UserDto>(result);
             return userDto;
         }
+
+        public async Task<User> GetByUserModal(int id)
+        {
+            var user = await _genericRepository.GetById(id);
+            return user;
+        }
     }
 }

@@ -29,25 +29,9 @@ namespace WebAPI.Controllers
         }
         [HttpPost("/save-team")]
         [Authorize]
-        public async Task<ActionResult<bool>> createdTeam([FromForm] TeamDto teamDto)
+        public async Task<ApiResponse> createdTeam([FromBody] TeamDto teamDto)
         {
-            var file = teamDto.File;
-
-            var currentUser = HttpContext.User;
-
-            var userId = currentUser.FindFirst("userid")?.Value;
-            var adminUser = await _userService.GetByUser(int.Parse(userId));
-
-            var newTeam = new TeamDto
-            {
-                name = teamDto.name,
-                description = teamDto.description,
-                admin = adminUser,
-                AdminId = int.Parse(userId),
-            };
-            
-            var result = await _teamService.CreateTeam(newTeam,teamDto.File);
-     
+            var result = await _teamService.CreateTeam(teamDto, HttpContext.User);
             return result;
         }
         [HttpGet("/all-team")]

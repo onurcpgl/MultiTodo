@@ -57,14 +57,14 @@ namespace Bussines.Service.Abstract
 
             JwtSecurityToken securityToken = new(
                 claims: claims,
-                expires: DateTime.UtcNow.AddSeconds(10),
+                expires: DateTime.UtcNow.AddMinutes(10),
                 signingCredentials: creds
             );
 
             JwtSecurityTokenHandler tokenHandler = new();
             jwtToken.AccessToken = tokenHandler.WriteToken(securityToken);
             jwtToken.RefreshToken = CreateRefreshToken();
-            jwtToken.Expiration = DateTime.UtcNow.AddSeconds(10);
+            jwtToken.Expiration = DateTime.UtcNow.AddMinutes(10);
             return jwtToken;
         }
 
@@ -118,7 +118,7 @@ namespace Bussines.Service.Abstract
             if (user != null)
             {
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenEndDate = accesTokenTime.AddSeconds(15);
+                user.RefreshTokenEndDate = accesTokenTime.AddMinutes(20);
                 _genericRepository.Update(user);
                 return true;
             }

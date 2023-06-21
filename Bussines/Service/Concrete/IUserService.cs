@@ -15,6 +15,7 @@ namespace Bussines.Service.Concrete
     {
         Task<List<UserDto>> GetAllUser();
         Task<UserDto> GetByUser(int id);
+        Task<User> GetByUserModal(int id);
         Task<ApiResponse> SaveUser(UserDto user);
         UserDto FindLoginUser(ClaimsPrincipal claimsPrincipal);
         
