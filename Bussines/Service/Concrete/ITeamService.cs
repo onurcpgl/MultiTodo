@@ -13,10 +13,10 @@ namespace Bussines.Service.Concrete
     public interface ITeamService
     {
         Task<ApiResponse> CreateTeam(TeamDto team,ClaimsPrincipal claimsPrincipal);
-        Task<List<TeamDto>> GetAllTeam();
+        Task<List<TeamDto>> GetAllTeam(ClaimsPrincipal claimsPrincipal);
         Task<TeamDto> GetByTeam(int teamId);
-        Task<bool> DeleteTeam(TeamDto teamDto);
-        Task<bool> UpdateTeam(TeamDto teamDto);
+        Task<ApiResponse> DeleteTeam(int id);
+        Task<bool> UpdateTeam(TeamDto teamDto,ClaimsPrincipal claimsPrincipal);
         Task<bool> TeamAddUser(List<int> userId);
     }
 }

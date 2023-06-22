@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<ActionResult<List<TeamDto>>> getAllTeam()
         {
-            var result = await _teamService.GetAllTeam();
+            var result = await _teamService.GetAllTeam(HttpContext.User);
             if (result != null)
             {
                 return result;
@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
             }
 
         }
-        [HttpGet("/getby-team/{id}")]
+        [HttpGet("/team/{id}")]
         [Authorize]
         public async Task<ActionResult<TeamDto>> getByTeamId(int id)
         {
@@ -59,41 +59,17 @@ namespace WebAPI.Controllers
 
         [HttpDelete("/delete-team/{id}")]
         [Authorize]
-        public async Task<ActionResult> deleteTeam(int id)
+        public async Task<ApiResponse> deleteTeam(int id)
         {
-            var findTeam = await _teamService.GetByTeam(id);
-            var result = await _teamService.DeleteTeam(findTeam);
-            if(result)
-            {
-                return Ok("Silme işlemi gerçekleşti.");
-            }
-            else
-            {
-                return BadRequest("Silme işlemi gerçekleştirilemedi.");
-            }
-
+            var result = await _teamService.DeleteTeam(id);
+            return result;
         }
-        [HttpPut("/update-team/{id}")]
+        [HttpPut("/update-team")]
         [Authorize]
-        public async Task<ActionResult> updateTeam([FromBody] TeamDto teamDto,int id)
+        public async Task<bool> updateTeam([FromForm] TeamDto teamDto)
         {
-            var checkTeam = await _teamService.GetByTeam(id);
-            if (checkTeam == null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(teamDto, checkTeam);
-
-            
-            var result =await _teamService.UpdateTeam(checkTeam);
-            if (result)
-            {
-                return Ok("Güncelleme işlemi tamamlandı.");
-            }
-            else
-            {
-                return BadRequest("Güncelleme tamamlanmadı.");
-            }
+            var result =await _teamService.UpdateTeam(teamDto,HttpContext.User);
+            return result;
         }
 }
 }

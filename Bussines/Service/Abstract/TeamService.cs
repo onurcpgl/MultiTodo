@@ -43,32 +43,57 @@ namespace Bussines.Service.Abstract
                 mapTeam.owner = ownerUser;
                 mapTeam.ownerId = ownerUser.id;
                 var result = await _repository.Add(mapTeam);
-                return new ApiResponse { Message = "200", Response = result };
+                if(!result)
+                    return new ApiResponse { Message = "Zaten bir takıma sahipsiniz, birden fazla takım kuramazsınız.", Response = result };
+                else
+                return new ApiResponse { Message = "Takım başarıyla oluşturuldu.", Response = result };
             }
             else
             {
                 var userId = claimsPrincipal.FindFirst("userid")?.Value;
-                var mapTeam = _mapper.Map<Team>(team);
-                var ownerUser = await _userService.GetByUserModal(int.Parse(userId));
-                mapTeam.owner = ownerUser;
-                mapTeam.ownerId = int.Parse(userId);
-                var result = await _repository.Add(mapTeam);
-                return new ApiResponse { Message = "200", Response = result };
+                var haveUserTeam = _repository.GetWhere(x => x.ownerId == int.Parse(userId)).FirstOrDefault();
+                if(haveUserTeam == null)
+                {
+                    var mapTeam = _mapper.Map<Team>(team);
+                    var ownerUser = await _userService.GetByUserModal(int.Parse(userId));
+                    mapTeam.owner = ownerUser;
+                    mapTeam.ownerId = int.Parse(userId);
+                    var result = await _repository.Add(mapTeam);
+                    return new ApiResponse { Message = "Takım başarıyla oluşturuldu.", Response = result };
+                }
+                else
+                {
+                    return new ApiResponse { Message = "Zaten bir takıma sahipsiniz, birden fazla takım kuramazsınız.", Response = false };
+                }     
             }
             
         }
 
-        public async Task<bool> DeleteTeam(TeamDto teamDto)
+        public async Task<ApiResponse> DeleteTeam(int id)
         {
-            var mapTeam = _mapper.Map<Team>(teamDto);
-            var result =  _repository.Delete(mapTeam);
-            return result;
+            var findTeam = await _repository.GetById(id);
+            var result = _repository.Delete(findTeam);
+            if(result)
+                return new ApiResponse { Message = "Silme işlemi başarılı", Response = 200 };
+            else 
+                return new ApiResponse { Message = "Silme işlemi gerçekleşmedi.",Response = 400 };
         }
 
-        public async Task<List<TeamDto>> GetAllTeam()
+        public async Task<List<TeamDto>> GetAllTeam(ClaimsPrincipal claimsPrincipal)
         {
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
             var result = await _repository.GetAllWithInclude(true, x => x.owner).ToListAsync();
+
+            foreach (var item in result)
+            {
+                if (item.ownerId != int.Parse(userId))
+                {
+                    item.owner = null;
+                }
+                
+            }
             var mapTeam = _mapper.Map<List<TeamDto>>(result);
+    
             return mapTeam;
         }
 
@@ -85,11 +110,23 @@ namespace Bussines.Service.Abstract
             //Kullanıcı birden fazla kişiye istek atıcak kabul edilenler kayıt edilecek.
         }
 
-        public async Task<bool> UpdateTeam(TeamDto teamDto)
+        public async Task<bool> UpdateTeam(TeamDto teamDto,ClaimsPrincipal claimsPrincipal)
         {
-            var mapTeam = _mapper.Map<Team>(teamDto);
-            var result =  _repository.Update(mapTeam);
-            return result;
+            if (teamDto.formFile != null)
+            {
+                var userId = claimsPrincipal.FindFirst("userid")?.Value;
+                var teamMedia = await _mediaService.SaveTeamMedia(teamDto.formFile, int.Parse(userId));
+                var mapTeam = _mapper.Map<Team>(teamDto);
+                mapTeam.media = teamMedia;
+                var result = _repository.Update(mapTeam);
+                return result;
+            }
+            else
+            {
+                var mapTeam = _mapper.Map<Team>(teamDto);
+                var result = _repository.Update(mapTeam);
+                return result;
+            }
         }
     }
 }

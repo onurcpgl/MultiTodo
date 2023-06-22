@@ -14,6 +14,7 @@ namespace Bussines.DTO
         public string name { get; set; }
         public string description { get; set; }
         public UserDto? owner { get; set; }
+        public int? ownerId { get; set; }
         public IFormFile? formFile { get; set; } 
     }
 }
