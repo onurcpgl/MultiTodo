@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DataAccess.Models;
+using Microsoft.AspNetCore.Http;
 using Models.Models;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace Bussines.DTO
         public UserDto? owner { get; set; }
         public int? ownerId { get; set; }
         public IFormFile? formFile { get; set; } 
+        public Media? media { get; set; }
+        public string? teamImage { get; set; }
     }
 }

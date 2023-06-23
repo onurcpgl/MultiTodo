@@ -14,6 +14,7 @@ namespace Bussines.DTO
         public string lastName { get; set; }
         public string mail { get; set; }
         public IFormFile? formFile { get; set; }
+        
   
     }
 }

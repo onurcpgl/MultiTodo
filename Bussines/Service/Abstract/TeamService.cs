@@ -20,16 +20,17 @@ namespace Bussines.Service.Abstract
     public class TeamService : ITeamService
     {
         private readonly IGenericRepository<Team> _repository;
+        private readonly IGenericRepository<Request> _repositoryRequest;
         private readonly IMediaService _mediaService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public TeamService(IGenericRepository<Team> repository, IMapper mapper, IMediaService mediaService,IUserService userService)
+        public TeamService(IGenericRepository<Team> repository, IGenericRepository<Request> repositoryRequest, IMapper mapper, IMediaService mediaService,IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
             _mediaService = mediaService;
             _userService = userService;
-
+            _repositoryRequest = repositoryRequest;
         }
         public async Task<ApiResponse> CreateTeam(TeamDto team,ClaimsPrincipal claimsPrincipal)
         {
@@ -39,6 +40,7 @@ namespace Bussines.Service.Abstract
                 var mediaTeam = await _mediaService.SaveTeamMedia(team.formFile,int.Parse(userId));
                 var mapTeam = _mapper.Map<Team>(team);
                 mapTeam.media = mediaTeam;
+                mapTeam.teamImage = mediaTeam.AbsolutePath + mediaTeam.RealFilename;
                 var ownerUser =  _mapper.Map<User>(_userService.GetByUser(int.Parse(userId)));
                 mapTeam.owner = ownerUser;
                 mapTeam.ownerId = ownerUser.id;
@@ -83,7 +85,7 @@ namespace Bussines.Service.Abstract
         {
             var userId = claimsPrincipal.FindFirst("userid")?.Value;
             var result = await _repository.GetAllWithInclude(true, x => x.owner).ToListAsync();
-
+            
             foreach (var item in result)
             {
                 if (item.ownerId != int.Parse(userId))
@@ -93,7 +95,6 @@ namespace Bussines.Service.Abstract
                 
             }
             var mapTeam = _mapper.Map<List<TeamDto>>(result);
-    
             return mapTeam;
         }
 
@@ -110,14 +111,14 @@ namespace Bussines.Service.Abstract
             //Kullanıcı birden fazla kişiye istek atıcak kabul edilenler kayıt edilecek.
         }
 
-        public async Task<bool> UpdateTeam(TeamDto teamDto,ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> UpdateTeam(TeamDto teamDto)
         {
             if (teamDto.formFile != null)
             {
-                var userId = claimsPrincipal.FindFirst("userid")?.Value;
-                var teamMedia = await _mediaService.SaveTeamMedia(teamDto.formFile, int.Parse(userId));
+                var teamMedia = await _mediaService.SaveTeamMedia(teamDto.formFile, teamDto.id);
                 var mapTeam = _mapper.Map<Team>(teamDto);
                 mapTeam.media = teamMedia;
+                mapTeam.teamImage = $"http://localhost:9000/{teamMedia.FilePath}/{teamMedia.RealFilename}";
                 var result = _repository.Update(mapTeam);
                 return result;
             }
@@ -126,6 +127,34 @@ namespace Bussines.Service.Abstract
                 var mapTeam = _mapper.Map<Team>(teamDto);
                 var result = _repository.Update(mapTeam);
                 return result;
+            }
+        }
+
+        public async Task<ApiResponse> UserInvite(RequestDto requestDto, ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = claimsPrincipal.FindFirst("userId").Value;
+            var haveTeam =  _repository.GetWhere(x => x.ownerId == int.Parse(userId));
+            if(haveTeam == null)
+            {
+                //Düzelt
+                return new ApiResponse { Message = "İsteğiniz gerçkleştirilemedi.", Response = 400 };
+            }
+            else
+            {
+                var request = new Request
+                {
+                    sendUserId = requestDto.sendUserId,
+                    receiveUserId = requestDto.receiveUserId,
+                    requestEnum = requestDto.requestEnum,
+                    requestResult = requestDto.requestResult
+                };
+
+                var response = await _repositoryRequest.Add(request);
+                if(response)
+                    return new ApiResponse { Message="İstek başarıyla gönderildi.", Response = 200 };
+                else
+                    return new ApiResponse { Message = "İstek gönderilirken bir hata meydana geldi.", Response = 400 };
+
             }
         }
     }

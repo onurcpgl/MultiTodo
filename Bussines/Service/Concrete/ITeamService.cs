@@ -16,7 +16,8 @@ namespace Bussines.Service.Concrete
         Task<List<TeamDto>> GetAllTeam(ClaimsPrincipal claimsPrincipal);
         Task<TeamDto> GetByTeam(int teamId);
         Task<ApiResponse> DeleteTeam(int id);
-        Task<bool> UpdateTeam(TeamDto teamDto,ClaimsPrincipal claimsPrincipal);
+        Task<ApiResponse> UserInvite(RequestDto requestDto, ClaimsPrincipal claimsPrincipal);
+        Task<bool> UpdateTeam(TeamDto teamDto);
         Task<bool> TeamAddUser(List<int> userId);
     }
 }

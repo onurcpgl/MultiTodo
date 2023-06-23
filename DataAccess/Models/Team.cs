@@ -15,7 +15,6 @@ namespace DataAccess.Models
         public string? description { get; set; }
         public int? ownerId { get; set; }
         public string? teamImage { get; set; }
-
         public User? owner { get; set; }  
         public ICollection<User>? memberList { get; set; }
         public Media? media { get; set; }

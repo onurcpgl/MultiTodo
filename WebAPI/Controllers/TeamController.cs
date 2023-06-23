@@ -68,7 +68,15 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<bool> updateTeam([FromForm] TeamDto teamDto)
         {
-            var result =await _teamService.UpdateTeam(teamDto,HttpContext.User);
+            var result =await _teamService.UpdateTeam(teamDto);
+            return result;
+        }
+
+        [HttpDelete("/user-invite")]
+        [Authorize]
+        public async Task<ApiResponse> userInviteTeam([FromBody] RequestDto requestDto)
+        {
+            var result = await _teamService.UserInvite(requestDto,HttpContext.User);
             return result;
         }
 }
