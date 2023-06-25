@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bussines.DTO;
 using Bussines.Service.Concrete;
+using DataAccess.Helpers.Enums;
 using DataAccess.Models;
 using DataAccess.Repositories.Abstract;
 using DataAccess.Repositories.Concrete;
@@ -27,17 +28,20 @@ namespace Bussines.Service.Abstract
     public class UserService : IUserService
     {
         private readonly IGenericRepository<User> _genericRepository;
+        private readonly IGenericRepository<Request> _requestRepository;
+
         private readonly IConfiguration _configuration;
         private readonly IMediaService _mediaService;
         private readonly IMapper _mapper;
        
 
-        public UserService(IGenericRepository<User> genericRepository, IMapper mapper, IConfiguration configuration,IMediaService mediaService)
+        public UserService(IGenericRepository<User> genericRepository, IGenericRepository<Request> requestRepository, IMapper mapper, IConfiguration configuration,IMediaService mediaService)
         {
             _mapper = mapper;
             _genericRepository = genericRepository;
             _configuration = configuration;
             _mediaService = mediaService;
+            _requestRepository = requestRepository;
         }
 
         public async Task<List<UserDto>> GetAllUser()
@@ -54,7 +58,7 @@ namespace Bussines.Service.Abstract
             return userDto;
         }
 
-        public async Task<ApiResponse> SaveUser(UserDto userDto)
+        public async Task<ApiResponse> SaveUser(RegisterUserDto userDto)
         {
             //Email adresi ile daha önce kayıt yapılmış mı?
 
@@ -119,6 +123,13 @@ namespace Bussines.Service.Abstract
         {
             var user = await _genericRepository.GetById(id);
             return user;
+        }
+
+        public async Task<ApiResponse> CheckNotify(ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
+            var result = await _requestRepository.GetWhere(x => x.receiveUserId == int.Parse(userId)).ToListAsync();
+            return new ApiResponse { Message = "a", Response = result};
         }
     }
 }

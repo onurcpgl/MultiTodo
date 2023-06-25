@@ -72,6 +72,11 @@ namespace Bussines.Service.Abstract
                 var filePath = $"myapp/{todayDate}/{todayTime}";
                 var fullPath = $"{rootPath}/{filePath}";
                 var filenamehash = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+                Directory.CreateDirectory(fullPath);
+                using (var stream = new FileStream(Path.Combine(fullPath, formFile.FileName), FileMode.Create))
+                {
+                    await formFile.CopyToAsync(stream);
+                }
                 Media media = new Media
                 {
                     RealFilename = formFile.FileName,

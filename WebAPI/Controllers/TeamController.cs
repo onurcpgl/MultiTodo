@@ -72,11 +72,19 @@ namespace WebAPI.Controllers
             return result;
         }
 
-        [HttpDelete("/user-invite")]
+        [HttpPost("/user-invite")]
         [Authorize]
         public async Task<ApiResponse> userInviteTeam([FromBody] RequestDto requestDto)
         {
             var result = await _teamService.UserInvite(requestDto,HttpContext.User);
+            return result;
+        }
+        
+        [HttpGet("/team-member/{id}")]
+       
+        public async Task<List<UserDto>> teamMember(int teamId)
+        {
+            var result = await _teamService.TeamMember(teamId);
             return result;
         }
 }

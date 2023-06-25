@@ -111,6 +111,13 @@ namespace Bussines.Service.Abstract
             //Kullanıcı birden fazla kişiye istek atıcak kabul edilenler kayıt edilecek.
         }
 
+        public async Task<List<UserDto>> TeamMember(int teamId)
+        {
+            var result = await _repository.GetWhereWithInclude(x => x.id == teamId, true, b => b.memberList).FirstOrDefaultAsync();
+            var map = _mapper.Map<List<UserDto>>(result.memberList); 
+            return map;
+        }
+
         public async Task<bool> UpdateTeam(TeamDto teamDto)
         {
             if (teamDto.formFile != null)
@@ -143,7 +150,7 @@ namespace Bussines.Service.Abstract
             {
                 var request = new Request
                 {
-                    sendUserId = requestDto.sendUserId,
+                    sendUserId = int.Parse(userId),
                     receiveUserId = requestDto.receiveUserId,
                     requestEnum = requestDto.requestEnum,
                     requestResult = requestDto.requestResult
@@ -154,7 +161,6 @@ namespace Bussines.Service.Abstract
                     return new ApiResponse { Message="İstek başarıyla gönderildi.", Response = 200 };
                 else
                     return new ApiResponse { Message = "İstek gönderilirken bir hata meydana geldi.", Response = 400 };
-
             }
         }
     }

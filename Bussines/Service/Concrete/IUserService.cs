@@ -16,10 +16,10 @@ namespace Bussines.Service.Concrete
         Task<List<UserDto>> GetAllUser();
         Task<UserDto> GetByUser(int id);
         Task<User> GetByUserModal(int id);
-        Task<ApiResponse> SaveUser(UserDto user);
+        Task<ApiResponse> SaveUser(RegisterUserDto user);
         UserDto FindLoginUser(ClaimsPrincipal claimsPrincipal);
-        
- 
+
+        Task<ApiResponse> CheckNotify(ClaimsPrincipal claimsPrincipal);
         Task<bool> UserUpdate(UserDto userDto,ClaimsPrincipal claimsPrincipal);
        
         Task<User> FindUserWithRefreshToken(string refreshToken);

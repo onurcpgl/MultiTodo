@@ -17,7 +17,11 @@ namespace Bussines.DTO
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Team, TeamDto>().ReverseMap();
             CreateMap<Todo, TodoDto>().ReverseMap();
-            CreateMap<Media, MediaDto>().ReverseMap();  
+            CreateMap<Media, MediaDto>().ReverseMap();
+            CreateMap<User, RegisterUserDto>().ReverseMap();
+            CreateMap<Request, RequestDto>().ReverseMap();
+
+
         }
     }
 }

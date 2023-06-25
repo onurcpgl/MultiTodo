@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
             _authService = authService;
         }
         [HttpPost("/user")]
-        public async Task<ApiResponse> AddUser([FromBody] UserDto userDto)
+        public async Task<ApiResponse> AddUser([FromBody] RegisterUserDto userDto)
         {
             var result = await _userService.SaveUser(userDto);
             return result;
@@ -57,6 +57,12 @@ namespace WebAPI.Controllers
             var result = await _userService.GetAllUser();
             return result;
         }
-
+        [HttpGet("/check-notify")]
+        [Authorize]
+        public async Task<ApiResponse> GetNotify()
+        {
+            var result = await _userService.CheckNotify(HttpContext.User);
+            return result;
+        }
     }
 }
