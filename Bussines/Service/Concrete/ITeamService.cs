@@ -1,6 +1,7 @@
 ﻿using Bussines.DTO;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
+using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace Bussines.Service.Concrete
         Task<ApiResponse> UserInvite(RequestDto requestDto, ClaimsPrincipal claimsPrincipal);
         Task<bool> UpdateTeam(TeamDto teamDto);
         Task<bool> TeamAddUser(List<int> userId);
+      
     }
 }

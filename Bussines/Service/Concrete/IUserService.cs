@@ -23,5 +23,6 @@ namespace Bussines.Service.Concrete
         Task<bool> UserUpdate(UserDto userDto,ClaimsPrincipal claimsPrincipal);
        
         Task<User> FindUserWithRefreshToken(string refreshToken);
+        Task<ApiResponse> NotifyRequestHandler(RequestDto requestDto);
     }
 }

@@ -23,9 +23,9 @@ namespace DataAccess.Context
                 .WithOne(t => t.User)
                 .HasForeignKey(userTodos => userTodos.Userid);
              
-            modelBuilder.Entity<Team>()
-                .HasMany(u => u.memberList)
-                .WithMany(t => t.Teams);
+                modelBuilder.Entity<Team>()
+                    .HasMany(u => u.memberList)
+                    .WithMany(t => t.Teams);
 
             modelBuilder.Entity<Media>()
                 .HasOne(media => media.user)

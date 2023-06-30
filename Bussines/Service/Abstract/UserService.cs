@@ -13,10 +13,12 @@ using Microsoft.IdentityModel.Tokens;
 using Models.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,19 +31,21 @@ namespace Bussines.Service.Abstract
     {
         private readonly IGenericRepository<User> _genericRepository;
         private readonly IGenericRepository<Request> _requestRepository;
-
+        private readonly IGenericRepository<Team> _teamRepository;
         private readonly IConfiguration _configuration;
         private readonly IMediaService _mediaService;
+
         private readonly IMapper _mapper;
        
 
-        public UserService(IGenericRepository<User> genericRepository, IGenericRepository<Request> requestRepository, IMapper mapper, IConfiguration configuration,IMediaService mediaService)
+        public UserService(IGenericRepository<User> genericRepository, IGenericRepository<Team> teamRepository, IGenericRepository<Request> requestRepository, IMapper mapper, IConfiguration configuration,IMediaService mediaService)
         {
             _mapper = mapper;
             _genericRepository = genericRepository;
             _configuration = configuration;
             _mediaService = mediaService;
             _requestRepository = requestRepository;
+            _teamRepository = teamRepository;   
         }
 
         public async Task<List<UserDto>> GetAllUser()
@@ -80,7 +84,6 @@ namespace Bussines.Service.Abstract
             
             
         }
-
         public async Task<bool> UserUpdate(UserDto userDto,ClaimsPrincipal claimsPrincipal)
         {
           
@@ -103,8 +106,6 @@ namespace Bussines.Service.Abstract
            
             
         }
-
-      
         public async Task<User> FindUserWithRefreshToken(string refreshToken)
         {
             var result =  _genericRepository.GetWhere(x => x.RefreshToken == refreshToken).FirstOrDefault();
@@ -124,12 +125,74 @@ namespace Bussines.Service.Abstract
             var user = await _genericRepository.GetById(id);
             return user;
         }
-
+        public static string GetEnumDescription(Enum value)
+        {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+            if (field != null)
+            {
+                DescriptionAttribute attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+                if (attribute != null)
+                {
+                    return attribute.Description;
+                }
+            }
+            return value.ToString();
+        }
         public async Task<ApiResponse> CheckNotify(ClaimsPrincipal claimsPrincipal)
         {
             var userId = claimsPrincipal.FindFirst("userid")?.Value;
-            var result = await _requestRepository.GetWhere(x => x.receiveUserId == int.Parse(userId)).ToListAsync();
-            return new ApiResponse { Message = "a", Response = result};
+            var result = await _requestRepository.GetWhere(x => x.receiveUserId == int.Parse(userId) && x.requestResult == 0).ToListAsync();
+            var transformedRequests = result.Select(request => new
+            {
+                request.id,
+                request.sendUserId,
+                request.receiveUserId,
+                requestor = _mapper.Map<UserDto>(_genericRepository.GetById(request.sendUserId).Result),
+                requestEnum = GetEnumDescription(request.requestEnum),
+                requestResult = GetEnumDescription(request.requestResult)
+            }).ToList();
+            return new ApiResponse { Message = "Bildirim listesi.", Response = transformedRequests };
+        }
+
+        public async Task<ApiResponse> NotifyRequestHandler(RequestDto requestDto)
+        {
+            
+            if(requestDto.requestResult == RequestResponse.Reject)
+            {
+                var requestMap = _mapper.Map<Request>(requestDto);
+                var result = _requestRepository.Update(requestMap);
+                if (result)
+                    return new ApiResponse { Message = "İstek reddedildi." };
+                else
+                    return new ApiResponse { Message = "Hata meydana geldi." };
+            }
+            else
+            {
+                if(requestDto.requestEnum == RequestEnum.TeamRequest)
+                {
+                    var user = await _genericRepository.GetById(requestDto.receiveUserId);
+                    var findTeam = await _teamRepository.GetWhere(x => x.ownerId == requestDto.sendUserId).FirstAsync();
+
+                    if (findTeam.memberList == null)
+                    {
+                        findTeam.memberList = new List<User>();
+                    }
+                    findTeam.memberList.Add(user);
+
+                    var result =  _teamRepository.Update(findTeam);
+                    var requstMap = _mapper.Map<Request>(requestDto);
+                    await _requestRepository.UpdateModel(requstMap);
+                    if (result)
+                        
+                        return new ApiResponse { Message = "Takıma üye kaydı başarıyla tamamlandı."};
+                    else
+                        return new ApiResponse { Message = "Takıma üye ekleme başarısız." };
+                }
+                else
+                {
+                    return new ApiResponse { Message = "Burada arkadaşlık isteği işlemleri yapılacak." };
+                }
+            }
         }
     }
 }

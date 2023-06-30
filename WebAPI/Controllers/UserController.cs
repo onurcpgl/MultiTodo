@@ -64,5 +64,12 @@ namespace WebAPI.Controllers
             var result = await _userService.CheckNotify(HttpContext.User);
             return result;
         }
+        [HttpPost("/notify-handler")]
+        [Authorize]
+        public async Task<ApiResponse> NotifyHandler([FromBody] RequestDto requestDto)
+        {
+            var result = await _userService.NotifyRequestHandler(requestDto);
+            return result;
+        }
     }
 }

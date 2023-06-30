@@ -155,12 +155,29 @@ namespace Bussines.Service.Abstract
                     requestEnum = requestDto.requestEnum,
                     requestResult = requestDto.requestResult
                 };
-
-                var response = await _repositoryRequest.Add(request);
-                if(response)
-                    return new ApiResponse { Message="İstek başarıyla gönderildi.", Response = 200 };
+                var beforeRequest = _repositoryRequest.GetWhere(x => x.sendUserId == request.sendUserId && x.receiveUserId == request.receiveUserId).FirstOrDefault();
+                if(beforeRequest == null)
+                {
+                    var response = await _repositoryRequest.Add(request);
+                    return new ApiResponse { Message = "İstek başarıyla gönderildi.", Response = 200 };
+                }
                 else
-                    return new ApiResponse { Message = "İstek gönderilirken bir hata meydana geldi.", Response = 400 };
+                {
+                    if (beforeRequest.requestResult != 0)
+                    {
+
+                        beforeRequest.requestResult = 0;
+                        
+                        var response = _repositoryRequest.Update(request);
+                        return new ApiResponse { Message = "İstek başarıyla gönderildi.", Response = 200 };
+                    }
+                    else
+                    {
+                        return new ApiResponse { Message = "Bu kullanıcıya daha önce istek atılmış.", Response = 400 };
+                    }
+                }
+                
+                    
             }
         }
     }
