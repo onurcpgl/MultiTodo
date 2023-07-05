@@ -24,5 +24,8 @@ namespace Bussines.Service.Concrete
        
         Task<User> FindUserWithRefreshToken(string refreshToken);
         Task<ApiResponse> NotifyRequestHandler(RequestDto requestDto);
+        Task<List<UserDto>> NotTeamMember(int teamId,ClaimsPrincipal claimsPrincipal);
+        Task<ApiResponse> ChangePassword(PasswordDto passwordDto, ClaimsPrincipal claimsPrincipal);
+
     }
 }

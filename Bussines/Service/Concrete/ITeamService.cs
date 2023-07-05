@@ -15,12 +15,13 @@ namespace Bussines.Service.Concrete
     {
         Task<ApiResponse> CreateTeam(TeamDto team,ClaimsPrincipal claimsPrincipal);
         Task<List<TeamDto>> GetAllTeam(ClaimsPrincipal claimsPrincipal);
-        Task<TeamDto> GetByTeam(int teamId);
+        Task<TeamDto> GetByTeam(int teamId,ClaimsPrincipal claimsPrincipal);
         Task<List<UserDto>> TeamMember(int teamId);
         Task<ApiResponse> DeleteTeam(int id);
         Task<ApiResponse> UserInvite(RequestDto requestDto, ClaimsPrincipal claimsPrincipal);
         Task<bool> UpdateTeam(TeamDto teamDto);
         Task<bool> TeamAddUser(List<int> userId);
-      
+        Task<UserDto> TeamOwnerProfile(int teamId);
+
     }
 }

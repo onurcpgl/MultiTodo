@@ -18,7 +18,8 @@ namespace Models.Models
         public ICollection<Team>? Teams { get; set; }
         public Team? teamOwner { get; set; }  
         public Media? media { get; set; }
-        public string? RefreshToken { get; set; }    
+        public string? RefreshToken { get; set; }
+        public string? teamImage { get; set; }
         public DateTime? RefreshTokenEndDate { get; set; }
         
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.Helpers.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,6 @@ namespace Models.Models
         public DateTime createdDate { get; set; }
         public int Userid { get; set; }
         public User User { get; set; }
-
+        public TaskResultEnum taskResultEnum { get; set; }
     }
 }

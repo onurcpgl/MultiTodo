@@ -119,6 +119,9 @@ namespace DataAccess.Migrations
                     b.Property<int?>("ownerId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("status")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("teamImage")
                         .HasColumnType("text");
 
@@ -147,6 +150,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("taskResultEnum")
+                        .HasColumnType("integer");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -187,6 +193,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("password")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("teamImage")
                         .HasColumnType("text");
 
                     b.HasKey("id");

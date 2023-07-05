@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DataAccess.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Bussines.DTO
         public string lastName { get; set; }
         public string mail { get; set; }
         public IFormFile? formFile { get; set; }
-        
-  
+        public string? teamImage { get; set; }
     }
 }

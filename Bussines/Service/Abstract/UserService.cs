@@ -57,7 +57,7 @@ namespace Bussines.Service.Abstract
 
         public async Task<UserDto> GetByUser(int id)
         {
-            var result =  _genericRepository.GetWhere(x => x.id == id).FirstOrDefault();
+            var result = _genericRepository.GetWhereWithInclude(x => x.id == id ,true,x => x.media).FirstOrDefaultAsync();
             var userDto = _mapper.Map<UserDto>(result);
             return userDto;
         }
@@ -91,9 +91,12 @@ namespace Bussines.Service.Abstract
             {
                 var userId = claimsPrincipal.FindFirst("userid")?.Value;
                 var userMedia = await _mediaService.SaveUserMedia(userDto.formFile,int.Parse(userId));
-                var mapUser = _mapper.Map<User>(userDto);
-                mapUser.media = userMedia;
-                var result = _genericRepository.Update(mapUser);
+                var user = _genericRepository.GetById(int.Parse(userId)).Result;
+                user.firstName = userDto.firstName;
+                user.lastName = userDto.lastName;
+                user.mail = userDto.mail;
+                user.media = userMedia;
+                var result = _genericRepository.Update(user);
                 return result;
             }
             else
@@ -115,8 +118,10 @@ namespace Bussines.Service.Abstract
         public UserDto FindLoginUser(ClaimsPrincipal claimsPrincipal)
         {
             var userId = claimsPrincipal.FindFirst("userid")?.Value;
-            var result = _genericRepository.GetWhere(x => x.id == int.Parse(userId)).FirstOrDefault();
-            var userDto = _mapper.Map<UserDto>(result);
+            var result = _genericRepository.GetWhereWithInclude(x => x.id == int.Parse(userId), true, x => x.media).FirstOrDefaultAsync();
+            var userDto = _mapper.Map<UserDto>(result.Result);
+            if(result.Result.media != null)
+                userDto.teamImage = $"http://localhost:9000/{result.Result.media.FilePath}/{result.Result.media.RealFilename}";          
             return userDto;
         }
 
@@ -192,6 +197,50 @@ namespace Bussines.Service.Abstract
                 {
                     return new ApiResponse { Message = "Burada arkadaşlık isteği işlemleri yapılacak." };
                 }
+            }
+        }
+
+        public async Task<List<UserDto>> NotTeamMember(int teamId, ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
+            var user = await _genericRepository.GetWhereWithInclude(x => x.id == int.Parse(userId),true, x => x.teamOwner).FirstOrDefaultAsync();
+           
+            if (user.teamOwner != null && user.teamOwner.id == teamId)
+            {
+                var result = await _genericRepository.GetWhereWithInclude(x => x.id != int.Parse(userId),true, x => x.Teams,x => x.media).Where(x => !x.Teams.Any(t => t.id == teamId)).ToListAsync();
+                foreach (var item in result)
+                {
+                    if(item.media != null)
+                    {
+                        item.teamImage = $"http://localhost:9000/{item.media.FilePath}/{item.media.RealFilename}";
+                    }
+                }
+                var teamList = result.ToList();
+                var mapAllUser = _mapper.Map<List<UserDto>>(teamList);
+                return mapAllUser;
+            }
+            else {
+                return new List<UserDto> { };
+            }
+           
+        }
+
+        public async Task<ApiResponse> ChangePassword(PasswordDto passwordDto, ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = claimsPrincipal.FindFirst("userid")?.Value;
+            var user = await _genericRepository.GetById(int.Parse(userId));
+            if(user == null)
+            {
+                return new ApiResponse { Message = "Kullanıcı bulunamadı", Response = false };    
+            }
+            else
+            {
+                user.password = passwordDto.password;
+                var result = _genericRepository.Update(user);
+                if(result == null)
+                    return new ApiResponse { Message="Şifre değiştirilirken bir hata meydana geldi.", Response = false };
+                else
+                    return new ApiResponse { Message="Şifre değiştirme işlemi başarılı.", Response = false };
             }
         }
     }

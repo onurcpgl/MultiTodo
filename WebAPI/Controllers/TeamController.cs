@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<ActionResult<TeamDto>> getByTeamId(int id)
         {
-            var result = await _teamService.GetByTeam(id);
+            var result = await _teamService.GetByTeam(id,HttpContext.User);
             return result;
         }
 
@@ -80,12 +80,18 @@ namespace WebAPI.Controllers
             return result;
         }
         
-        [HttpGet("/team-member/{id}")]
+        [HttpGet("/team-member/{teamId}")]
        
         public async Task<List<UserDto>> teamMember(int teamId)
         {
             var result = await _teamService.TeamMember(teamId);
             return result;
         }
-}
+        [HttpGet("/team-owner/{teamId}")]
+        public async Task<UserDto> teamOwner(int teamId)
+        {
+            var result = await _teamService.TeamOwnerProfile(teamId);
+            return result;
+        }
+    }
 }

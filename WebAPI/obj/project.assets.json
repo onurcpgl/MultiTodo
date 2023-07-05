@@ -5725,19 +5725,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\onurc\\.nuget\\packages\\": {}
+    "C:\\Users\\onurs\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\WebAPI\\WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\WebAPI\\WebAPI.csproj",
       "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\WebAPI\\WebAPI.csproj",
-      "packagesPath": "C:\\Users\\onurc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\WebAPI\\obj\\",
+      "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\WebAPI\\WebAPI.csproj",
+      "packagesPath": "C:\\Users\\onurs\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\onurc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\onurs\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5745,18 +5745,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj": {
-              "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\Bussines\\Bussines.csproj"
+            "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\Bussines\\Bussines.csproj": {
+              "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\Bussines\\Bussines.csproj"
             },
-            "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj": {
-              "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj"
+            "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\DataAccess\\DataAccess.csproj": {
+              "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\DataAccess\\DataAccess.csproj"
             }
           }
         }
@@ -5825,7 +5824,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

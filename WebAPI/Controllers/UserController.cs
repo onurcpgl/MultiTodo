@@ -51,12 +51,14 @@ namespace WebAPI.Controllers
             var result =await _userService.UserUpdate(userDto, HttpContext.User);
             return result;
         }
+
         [HttpGet("/all-user")]
         public async Task<List<UserDto>> GetAllUser()
         {
             var result = await _userService.GetAllUser();
             return result;
         }
+
         [HttpGet("/check-notify")]
         [Authorize]
         public async Task<ApiResponse> GetNotify()
@@ -69,6 +71,21 @@ namespace WebAPI.Controllers
         public async Task<ApiResponse> NotifyHandler([FromBody] RequestDto requestDto)
         {
             var result = await _userService.NotifyRequestHandler(requestDto);
+            return result;
+        }
+
+        [HttpGet("/get-team-member/{teamId}")]
+        public async Task<List<UserDto>> NotTeamMember(int teamId)
+        {
+            var result = await _userService.NotTeamMember(teamId, HttpContext.User);
+            return result;
+        }
+
+        [HttpPost("/change-password")]
+        [Authorize]
+        public async Task<ApiResponse> ChangePassword([FromBody] PasswordDto passwordDto)
+        {
+            var result = await _userService.ChangePassword(passwordDto, HttpContext.User);
             return result;
         }
     }

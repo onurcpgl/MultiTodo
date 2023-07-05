@@ -21,16 +21,18 @@ namespace Bussines.Service.Abstract
     {
         private readonly IGenericRepository<Team> _repository;
         private readonly IGenericRepository<Request> _repositoryRequest;
+        private readonly IGenericRepository<User> _userRepository;
         private readonly IMediaService _mediaService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public TeamService(IGenericRepository<Team> repository, IGenericRepository<Request> repositoryRequest, IMapper mapper, IMediaService mediaService,IUserService userService)
+        public TeamService(IGenericRepository<User> userRepository, IGenericRepository<Team> repository, IGenericRepository<Request> repositoryRequest, IMapper mapper, IMediaService mediaService,IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
             _mediaService = mediaService;
             _userService = userService;
             _repositoryRequest = repositoryRequest;
+            _userRepository = userRepository;
         }
         public async Task<ApiResponse> CreateTeam(TeamDto team,ClaimsPrincipal claimsPrincipal)
         {
@@ -98,11 +100,19 @@ namespace Bussines.Service.Abstract
             return mapTeam;
         }
 
-        public async Task<TeamDto> GetByTeam(int teamId)
+        public async Task<TeamDto> GetByTeam(int teamId, ClaimsPrincipal claimsPrincipal)
         {
+            var userId = claimsPrincipal.FindFirst("userid").Value;
+
             var selectedTeam = await _repository.GetById(teamId);
-            var mapDto = _mapper.Map<TeamDto>(selectedTeam);    
-            return mapDto;
+            if (selectedTeam.ownerId == int.Parse(userId))
+            {
+                var mapDto = _mapper.Map<TeamDto>(selectedTeam);
+                return mapDto;
+            }
+            else
+                return null;
+           
         }
 
         public Task<bool> TeamAddUser(List<int> userId)
@@ -113,9 +123,44 @@ namespace Bussines.Service.Abstract
 
         public async Task<List<UserDto>> TeamMember(int teamId)
         {
-            var result = await _repository.GetWhereWithInclude(x => x.id == teamId, true, b => b.memberList).FirstOrDefaultAsync();
+            //Düzenle
+            var members = await _repository.GetWhereWithInclude(
+                 x => x.id == teamId,
+                 true,
+                 m => m.memberList
+             ).FirstOrDefaultAsync();
+
+            if (members != null)
+            {
+                foreach (var member in members.memberList)
+                {
+                    var media = await _userRepository.GetWhereWithInclude(x => x.id == member.id,true, m => m.media).FirstOrDefaultAsync();
+
+                    member.media = media.media;
+                }
+            }
+
+            var result = members;
+            
+            foreach (var member in result.memberList)
+            {
+                if(member.media != null)
+                {
+                    member.teamImage = $"http://localhost:9000/{member.media.FilePath}/{member.media.RealFilename}";
+
+                }
+            }
             var map = _mapper.Map<List<UserDto>>(result.memberList); 
             return map;
+        }
+
+        public async Task<UserDto> TeamOwnerProfile(int teamId)
+        {
+            var result = await _repository.GetWhereWithInclude(x => x.id == teamId, true, x => x.owner.media).FirstOrDefaultAsync();
+            var mapUser = _mapper.Map<UserDto>(result.owner);
+            if (result.owner.media != null)
+                mapUser.teamImage = $"http://localhost:9000/{result.owner.media.FilePath}/{result.owner.media.RealFilename}";
+            return mapUser;
         }
 
         public async Task<bool> UpdateTeam(TeamDto teamDto)

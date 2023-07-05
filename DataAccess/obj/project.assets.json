@@ -1153,19 +1153,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\onurc\\.nuget\\packages\\": {}
+    "C:\\Users\\onurs\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
+      "projectUniqueName": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\DataAccess\\DataAccess.csproj",
       "projectName": "DataAccess",
-      "projectPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\DataAccess.csproj",
-      "packagesPath": "C:\\Users\\onurc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\onurc\\OneDrive\\Masaüstü\\multiple-todo-back\\DataAccess\\obj\\",
+      "projectPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\DataAccess\\DataAccess.csproj",
+      "packagesPath": "C:\\Users\\onurs\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\onurs\\OneDrive\\Masaüstü\\task-app-back\\DataAccess\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\onurc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\onurs\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1230,7 +1230,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
