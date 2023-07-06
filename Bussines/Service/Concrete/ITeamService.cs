@@ -22,6 +22,7 @@ namespace Bussines.Service.Concrete
         Task<bool> UpdateTeam(TeamDto teamDto);
         Task<bool> TeamAddUser(List<int> userId);
         Task<UserDto> TeamOwnerProfile(int teamId);
+        Task<bool> IsAdmin(int teamId,ClaimsPrincipal claimsPrincipal);
 
     }
 }

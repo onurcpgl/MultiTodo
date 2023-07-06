@@ -18,7 +18,8 @@ namespace DataAccess.Models
         public User? owner { get; set; }  
         public ICollection<User>? memberList { get; set; }
         public Media? media { get; set; }
-        public bool status { get; set; } 
+        public bool status { get; set; }
+        public ICollection<TeamTask>? TeamTasks { get; set; } 
 
     }
 }

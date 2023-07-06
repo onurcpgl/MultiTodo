@@ -93,5 +93,12 @@ namespace WebAPI.Controllers
             var result = await _teamService.TeamOwnerProfile(teamId);
             return result;
         }
+        [HttpGet("/is-admin/{teamId}")]
+        [Authorize]
+        public async Task<bool> isAdmin(int teamId)
+        {
+            var result = await _teamService.IsAdmin(teamId,HttpContext.User);
+            return result;
+        }
     }
 }

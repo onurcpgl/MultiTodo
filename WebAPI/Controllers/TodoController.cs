@@ -69,9 +69,8 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<bool> todoUpdate([FromBody] TodoDto todo)
         {
-            var result = await _todoService.UpdatedTodo(todo);
+            var result = await _todoService.UpdatedTodo(todo,HttpContext.User);
             return result;
-
         }
 
         [HttpDelete("/delete-todo/{id}")]

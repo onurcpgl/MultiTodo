@@ -23,7 +23,11 @@ namespace DataAccess.Context
                 .WithOne(t => t.User)
                 .HasForeignKey(userTodos => userTodos.Userid);
 
-      
+
+            modelBuilder.Entity<Team>()
+                .HasMany(t => t.TeamTasks)
+                .WithOne(tt => tt.TaskOwnerTeam);
+
 
             modelBuilder.Entity<Team>()
                     .HasMany(u => u.memberList)
@@ -50,7 +54,7 @@ namespace DataAccess.Context
         public DbSet<Team> Teams { get; set; }
         public DbSet<Media> Medias { get; set; }
         public DbSet<Request> Requests { get; set; }
-       
+        public DbSet<TeamTask> TeamTask { get; set; }
 
 
 

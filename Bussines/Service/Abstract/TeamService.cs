@@ -19,6 +19,7 @@ namespace Bussines.Service.Abstract
 {
     public class TeamService : ITeamService
     {
+        
         private readonly IGenericRepository<Team> _repository;
         private readonly IGenericRepository<Request> _repositoryRequest;
         private readonly IGenericRepository<User> _userRepository;
@@ -115,6 +116,17 @@ namespace Bussines.Service.Abstract
            
         }
 
+        public async Task<bool> IsAdmin(int teamId, ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = claimsPrincipal.FindFirst("userId").Value;
+            var team =  _repository.GetWhereWithInclude(x => x.id == teamId,true).FirstOrDefault();
+            if (team.ownerId == int.Parse(userId))
+                return true;
+            else
+                return false;
+
+        }
+
         public Task<bool> TeamAddUser(List<int> userId)
         {
             throw new NotImplementedException();
@@ -123,35 +135,25 @@ namespace Bussines.Service.Abstract
 
         public async Task<List<UserDto>> TeamMember(int teamId)
         {
-            //Düzenle
-            var members = await _repository.GetWhereWithInclude(
-                 x => x.id == teamId,
-                 true,
-                 m => m.memberList
-             ).FirstOrDefaultAsync();
 
-            if (members != null)
+            var teamMember = await _userRepository
+            .GetAllWithInclude(true, x => x.Teams, x => x.media)
+            .Where(x => x.Teams.Any(t => t.id == teamId))
+            .ToListAsync();
+
+            foreach (var member in teamMember)
             {
-                foreach (var member in members.memberList)
-                {
-                    var media = await _userRepository.GetWhereWithInclude(x => x.id == member.id,true, m => m.media).FirstOrDefaultAsync();
-
-                    member.media = media.media;
-                }
-            }
-
-            var result = members;
-            
-            foreach (var member in result.memberList)
-            {
-                if(member.media != null)
+                if (member.media != null)
                 {
                     member.teamImage = $"http://localhost:9000/{member.media.FilePath}/{member.media.RealFilename}";
 
                 }
             }
-            var map = _mapper.Map<List<UserDto>>(result.memberList); 
-            return map;
+            var mapTeamMember = _mapper.Map<List<UserDto>>(teamMember);
+            return mapTeamMember;
+
+          
+
         }
 
         public async Task<UserDto> TeamOwnerProfile(int teamId)

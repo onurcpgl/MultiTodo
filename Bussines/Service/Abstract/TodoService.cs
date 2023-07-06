@@ -82,12 +82,18 @@ namespace Bussines.Service.Abstract
         }
 
 
-        public async Task<bool> UpdatedTodo(TodoDto todoDto)
+        public async Task<bool> UpdatedTodo(TodoDto todoDto,ClaimsPrincipal claimsPrincipal)
         {
-            var todoMap = _mapper.Map<Todo>(todoDto);
-            var result =  _repository.Update(todoMap);
-            return result;
-           
+            var userId = claimsPrincipal.FindFirst("userId").Value;
+            if(int.Parse(userId) == todoDto.Userid)
+            {
+                var todoMap = _mapper.Map<Todo>(todoDto);
+                var result = _repository.Update(todoMap);
+                return result;
+            }else
+            {
+                return false;
+            }
         }
     }
 }

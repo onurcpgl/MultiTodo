@@ -6,16 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bussines.DTO
+namespace DataAccess.Models
 {
-    public class TodoDto
+    public class TeamTask
     {
-        public int? id { get; set; }
+        public int id { get; set; }
         public string title { get; set; }
         public string description { get; set; }
-        public int? Userid { get; set; }
+        public DateTime createdDate { get; set; }
+        public int Userid { get; set; }
+        public User User { get; set; }
         public TaskResultEnum taskResultEnum { get; set; }
-
-
+        public Team TaskOwnerTeam { get; set; }
+        public DateTime ValidTaskTime { get; set; }
     }
 }
